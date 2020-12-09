@@ -32,6 +32,11 @@ public class Constant {
     public static final String CONFIG_PATH = PROJECT_PATH + "/config";
 
     /**
+     * 临时文件目录
+     */
+    public static final String TEMP_PATH = PROJECT_PATH + "/temp";
+
+    /**
      * 系统配置文件地址
      */
     public static final String SYSTEM_CONFIG_FILE = CONFIG_PATH + "/config.json";

@@ -3,12 +3,11 @@ package guhong.play.commandsystem.util;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
-import guhong.play.commandsystem.dto.entity.Command;
-import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.exception.SystemException;
 import guhong.play.commandsystem.job.CommandJob;
@@ -17,11 +16,10 @@ import lombok.Data;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
-
-import static guhong.play.commandsystem.constant.Constant.COMMAND_DATA_PATH;
 
 /**
  * 读取工具
@@ -146,4 +144,56 @@ public class FileOperationUtil {
     }
 
 
+    /**
+     * 创建文件或目录
+     * 不存在的话
+     * @param path 文件地址
+     * @param isDirectory 是否是目录
+     * @return 返回文件地址
+     */
+    public static File createFileOrDir(String path, boolean isDirectory) {
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                if (isDirectory) {
+                    FileUtil.mkdir(file);
+                } else {
+                    file.createNewFile();
+                }
+            }
+            return file;
+        } catch (Exception e) {
+            throw new RuntimeException("文件创建失败："+e.getMessage());
+        }
+    }
+
+    /**
+     * 创建文件，并写入内容
+     * @param path 文件地址
+     * @param content 文件内容
+     * @return 返回文件对象
+     */
+    public static File createFile(String path,  String content) {
+        File file = createFileOrDir(path, false);
+        IoUtil.write(FileUtil.getOutputStream(path), true, content.getBytes());
+        return file;
+    }
+
+    /**
+     * 创建目录
+     * @param path 目录地址
+     * @return 返回文件对象
+     */
+    public static File createDir(String path) {
+        return createFileOrDir(path, true);
+    }
+
+    /**
+     * 创建文件
+     * @param path 文件地址
+     * @return 返回文件对象
+     */
+    public static File createFile(String path) {
+        return createFileOrDir(path, false);
+    }
 }

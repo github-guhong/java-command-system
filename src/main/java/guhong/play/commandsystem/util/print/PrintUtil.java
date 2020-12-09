@@ -1,5 +1,6 @@
 package guhong.play.commandsystem.util.print;
 
+import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -206,5 +207,13 @@ public class PrintUtil {
         println(stringBuffer.toString());
     }
 
+    /**
+     * 打印数组
+     * @param array 数组
+     */
+    public static void printArray(String... array) {
+        String joinStr = ArrayUtil.join(array, ", ");
+        println(joinStr);
+    }
 
 }

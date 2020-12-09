@@ -6,6 +6,7 @@ import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.job.CommandJob;
 import lombok.Data;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -66,6 +67,16 @@ public class ToolUtil {
             return null;
         }
         return commandKey;
+    }
+
+    /**
+     * 获得环境变量的值
+     * @param key key
+     * @return 返回环境变量的值
+     */
+    public static String getEnv(String key) {
+        Map<String, String> envMap = System.getenv();
+        return envMap.get(key);
     }
 
 }

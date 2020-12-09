@@ -2,12 +2,19 @@ package guhong.play.commandsystem.util.windows;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.constant.Constant;
+import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 /**
@@ -38,6 +45,16 @@ public class CmdUtil {
     }
 
     /**
+     * 执行多个命令
+     * @param commands 命令列表
+     * @return 返回执行后的结果
+     */
+    public static Process exec(String... commands) {
+        String command = ArrayUtil.join(commands, "&");
+        return exec(command);
+    }
+
+    /**
      * 是否成功
      *
      * @param process 执行结果
@@ -51,7 +68,7 @@ public class CmdUtil {
         if (process.isAlive()) {
             try {
                 process.waitFor();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -85,9 +102,21 @@ public class CmdUtil {
      * @param process 执行结果
      */
     public static void printProcess(Process process) {
-        String str = parseProcess(process);
-        if (StrUtil.isNotBlank(str)) {
-            PrintUtil.println(str);
+        if (null == process) {
+            return ;
+        }
+        InputStream inputStream = process.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String tmp = null;
+        try {
+            while ((tmp = br.readLine()) != null) {
+                System.out.println(tmp);
+            }
+        } catch (Exception e) {
+            //
+        } finally {
+            IoUtil.close(br);
+            IoUtil.close(inputStream);
         }
     }
 
@@ -106,6 +135,7 @@ public class CmdUtil {
     /**
      * 解析执行结果
      * 执行成功返回成功信息，失败则返回失败信息
+     *
      * @param process 执行结果
      * @return 返回解析后执行结果信息
      */
@@ -130,11 +160,78 @@ public class CmdUtil {
     }
 
 
+    /**
+     * 获得当前所在路径
+     *
+     * @return 返回当前所在路径
+     */
     public static String getCurrentPath() {
         String command = "echo %cd%";
         String path = execAndParse(command);
         // 转换正反斜杠
         path = path.replaceAll("\\\\", "/");
         return path;
+    }
+
+    /**
+     * 执行临时脚本
+     *
+     * @param batCommandModel 命令模板
+     */
+    public static boolean executeTempBat(String batCommandModel) {
+        batCommandModel += "\n exit";
+
+        FileOperationUtil.createDir(Constant.TEMP_PATH);
+        String tempBatPath = Constant.TEMP_PATH + "/tempBat" + IdUtil.simpleUUID() + ".bat";
+        File file = new File(tempBatPath);
+        if (!FileUtil.exist(file)) {
+            try {
+                if (!file.createNewFile()) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                PrintUtil.errorPrint("创建临时脚本失败：" + e.getMessage());
+            }
+        }
+        // 将脚本写入临时文件
+        IoUtil.write(FileUtil.getOutputStream(file), true, batCommandModel.getBytes());
+        // 执行命令
+        Process process = exec(file.getPath());
+        CmdUtil.printProcess(process);
+
+        Boolean result = isSuccess(process);
+        if (result) {
+            FileUtil.del(file);
+        }
+        return result;
+    }
+
+
+    /**
+     * 将字符串格式化成cmd支持的字符
+     *
+     * @param value 要格式化的文字
+     * @return 格式化后的文字
+     */
+    public static String formatValue(String value) {
+        // 删除双引号
+        value = value.replaceAll("\"", "");
+
+        // 存在空格，使用双引号括起来
+        if (value.contains(" ")) {
+            return addQuote(value);
+
+        }
+        return value;
+    }
+
+    /**
+     * 添加双引号
+     *
+     * @param value 值
+     * @return 返回加好后的值
+     */
+    public static String addQuote(String value) {
+        return "\"" + value + "\"";
     }
 }

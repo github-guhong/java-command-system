@@ -1,12 +1,22 @@
 package guhong.play.commandsystem.job.system.job;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
+import guhong.play.commandsystem.exception.ExecuteException;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.system.entity.SystemCommandConfig;
+import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.XmlOperationUtil;
+import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * 构建工作，重新构建项目
@@ -23,8 +33,11 @@ public class CommandBuildJob implements CommandJob {
      */
     @Override
     public CommandConfig getCommandConfig() {
-        SystemCommandConfig systemCommandConfig = new SystemCommandConfig("build", "用于重新构建项目，暂不可用");
-        systemCommandConfig.setIntroduce("file:"+Constant.DOCUMENT_PATH+ "/system/Build.txt");
+        SystemCommandConfig systemCommandConfig = new SystemCommandConfig("build", "用于重新构建项目");
+        Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
+        paramConfig.put("-p", true);
+        systemCommandConfig.setParamConfig(paramConfig);
+        systemCommandConfig.setFileIntroduce("Build.txt");
         return systemCommandConfig;
     }
 
@@ -35,17 +48,61 @@ public class CommandBuildJob implements CommandJob {
      */
     @Override
     public void run(Command command) {
-        String buildProjectPath = command.getFirstValue();
+        String buildProjectPath = command.getParamValue("-p");
         if (StrUtil.isBlank(buildProjectPath)) {
             buildProjectPath = Constant.PROJECT_PATH;
         }
+        String version = XmlOperationUtil.getMavenVersion(buildProjectPath);
 
+        // 文件检查
+        String projectName = buildProjectPath.substring(buildProjectPath.lastIndexOf(File.separator)+1);
+        File startDir = FileOperationUtil.createDir(buildProjectPath + "/start");
+        File startLibDir = FileOperationUtil.createDir(buildProjectPath + "/start/lib");
+        FileOperationUtil.createFile(buildProjectPath + "/start/start.bat", getStartBatModel(projectName, version));
+
+
+        // 开始打包
+        System.out.println("开始打包。。。");
+        String commandModel = buildCommand(buildProjectPath);
+        Process process = CmdUtil.exec(commandModel);
+        CmdUtil.printProcess(process);
+
+        if (CmdUtil.isSuccess(process)) {
+            // 复制jar文件
+            String jarFilePath = buildProjectPath + "/target/"+projectName + "-" + version + "-jar-with-dependencies.jar";
+            FileUtil.copy(jarFilePath, startLibDir.getPath() , true);
+
+            // 复制config
+            String configPath = buildProjectPath + "/config";
+            if (FileUtil.exist(configPath)) {
+                FileUtil.copy(configPath, startDir.getPath() , true);
+            }
+            System.out.println("打包完成！");
+        }
+
+    }
+
+
+    /**
+     * 获得start.bat脚本的模板
+     * @return 返回模板
+     */
+    private String getStartBatModel(String projectName,String version) {
+        return "java -jar ./lib/"+projectName+"-"+version+"-jar-with-dependencies.jar\n" +
+                "\n" +
+                "exit\n";
+    }
+
+    /**
+     * 构建命令
+     * @param buildProjectPath 打包的项目地址
+     * @return 返回构件号的命令
+     */
+    private String buildCommand(String buildProjectPath) {
         // 进到指定目录
-        // 先clean
-        // 执行assembly的打包命令，如果没有则报错
-        // 把打包好的jar复制到start目录，如果目录不存在则创建
-        // 检查是否存在启动脚本，如果不存在则创建
-
-
+        // 执行clean assembly的打包命令
+        String drive = buildProjectPath.substring(0, buildProjectPath.indexOf(":"));
+        return drive + ": &" +
+                "cd " + buildProjectPath + " & call mvn clean assembly:assembly"  ;
     }
 }

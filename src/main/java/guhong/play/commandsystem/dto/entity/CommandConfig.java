@@ -2,6 +2,7 @@ package guhong.play.commandsystem.dto.entity;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.constant.Constant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -80,5 +81,8 @@ public class CommandConfig {
     }
 
 
+    public void setFileIntroduce(String fileName) {
+        this.setIntroduce("file:"+Constant.DOCUMENT_PATH + "/" +this.getGroup() + "/" +fileName);
+    }
 
 }

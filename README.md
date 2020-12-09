@@ -38,7 +38,7 @@
 
 #### 二）、安装/启动
 
-​	下载clone项目到本地，然后进入`start`目录，运行`start.bat`脚本即可
+​	下载或clone项目到本地，然后进入`start`目录，运行`start.bat`脚本即可
 
 
 
@@ -48,17 +48,12 @@
 
 ```
 config  				// 配置文件目录
-	command-data.json 	// 命令数据文件
-	config.json 		// 系统配置文件
 document 				// 命令文档目录，存放命令的介绍
 start 					// 启动文件目录
 	config 				// 运行时的配置目录，和上面同理
-		command-data.json
-		config.json
 	lib 				// 打包好的项目地址
-		command-system-1.0-jar-with-dependencies.jar
-	start.bat 			// 启动脚本
 src 					// 源码目录
+temp 					// 临时目录
 ```
 
 
@@ -343,23 +338,13 @@ value:
 
 **3、打包项目**
 
-​	先clean一下项目然后再打包
+​	实现好`CommandJob`接口后，运行项目，输入`build`命令，系统将自动帮你打包当前项目。
 
-​	注意要使用`assembly`插件打包，以`IDEA`中为例：
+**4、reload**
 
-```
-点开maven工具栏——>Plugins——> assembly——>assembly:assembly
-```
+​	打包好后，就可以用`start/start.bat`脚本启动项目，输入`reload`命令重新加载命令。
 
-​	选择`assembly:assembly`执行就好
-
-**4、复制到启动目录**
-
-​	将打包好的jar文件（注意是名字后缀带.`...with-dependencies.jar`的jar文件）放入`start\lib`目录中
-
-**5、reload**
-
-​	最后使用`start.bat`脚本启动项目，输入`reload`命令重新记载即可。	
+​	至此，你就可以使用你自己定义的命令了
 
 
 
@@ -368,15 +353,6 @@ value:
 
 ## 八、版本功能
 
-- v1
-
-- 优化默认的解析器 √
-
-- 高效加载命令，通过配置文件 √
-
-- 支持外部的文本介绍 √
-
-- -----------------------------------------------------------------------------------------------------------
 
 - v2
 - 窗口模式
@@ -387,8 +363,5 @@ value:
 - 适配windows
 - 支持别名
 - 支持环境变量
-- 完成`build`命令，快捷打包
 
 
-
-## 

@@ -2,6 +2,8 @@ package guhong.play.commandsystem.dto.entity;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -48,7 +50,13 @@ public class Command {
      */
     public String getParamValue(String paramName) {
         if (CollectionUtil.isNotEmpty(params)) {
-            return params.get(paramName);
+            String value = params.get(paramName);
+            if (StrUtil.isNotBlank(value)) {
+                if (ToolUtil.isBlankParam(value)) {
+                    return "";
+                }
+            }
+            return value;
         }
         return null;
      }
@@ -67,9 +75,16 @@ public class Command {
      * @return 返回指定索引下的值
      */
     public String getValue(int index) {
-        if (ArrayUtil.isNotEmpty(valueList)) {
-            return valueList.get(index);
+        if (CollectionUtil.isNotEmpty(valueList)) {
+            String value = valueList.get(index);
+            if (StrUtil.isNotBlank(value)) {
+                if (ToolUtil.isBlankParam(value)) {
+                    return "";
+                }
+            }
+            return value;
         }
         return null;
     }
+
 }

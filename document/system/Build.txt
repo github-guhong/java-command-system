@@ -1,2 +1,29 @@
-需要指定一个值，该值表示要打包的项目，只需要选择项目地址就行，不需要选择jar包的位置
-如果没有指定打包的项目，则打包本项目
+
+用法：
+build [-p projectDir]
+
+命令参数解析：
+无
+
+命令值解析：
+projectDir: 项目目录，如果没有指定项目则表示打包当前项目
+
+注意：
+执行该命令需要满足一下几点，否则无法打包
+1、指定的项目必须使用了[maven-assembly-plugin]插件
+    如：
+            <plugin>
+                 <artifactId>maven-assembly-plugin</artifactId>
+                 <configuration>
+                     <archive>
+                         <manifest>
+                             <mainClass>guhong.play.commandsystem.MainProgram</mainClass>
+                         </manifest>
+                     </archive>
+                     <descriptorRefs>
+                         <descriptorRef>jar-with-dependencies</descriptorRef>
+                     </descriptorRefs>
+                 </configuration>
+                 <version>2.2-beta-5</version>
+             </plugin>
+
