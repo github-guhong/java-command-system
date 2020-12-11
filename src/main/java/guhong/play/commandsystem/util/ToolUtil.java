@@ -41,8 +41,8 @@ public class ToolUtil {
     /**
      * 参数值是否为空
      * 用于判断命令参数的值是否为空字符串
-     * @param paramValue
-     * @return
+     * @param paramValue 参数值
+     * @return 是空字符串则为true
      */
     public static Boolean isBlankParam(String paramValue){
         if (paramValue.matches("\"\\s*\"")) {
@@ -61,6 +61,7 @@ public class ToolUtil {
         if (StrUtil.isBlank(commandStr)) {
             return null;
         }
+        commandStr = commandStr.trim();
         String[] split = commandStr.split("\\s");
         String commandKey = split[0];
         if (StrUtil.isBlank(commandKey)) {
@@ -79,4 +80,12 @@ public class ToolUtil {
         return envMap.get(key);
     }
 
+    /**
+     * 获得盘符
+     * @param path 路径
+     * @return 返回路径所在的盘符
+     */
+    public static String getDrive(String path) {
+        return path.substring(0, path.indexOf(":"));
+    }
 }

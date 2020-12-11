@@ -23,6 +23,13 @@ public interface CommandJob {
      */
     public CommandConfig getCommandConfig();
 
+    /**
+     * 开始执行任务
+     * @param command 命令对象
+     */
+    public void run(Command command);
+
+
 
     /**
      * 获得命令执行器
@@ -39,13 +46,6 @@ public interface CommandJob {
     public default CommandParseHandler getParseHandler() {
         return new DefaultCommandParseHandler();
     }
-
-
-    /**
-     * 开始执行任务
-     * @param command 命令对象
-     */
-    public void run(Command command);
 
     /**
      * 执行任务

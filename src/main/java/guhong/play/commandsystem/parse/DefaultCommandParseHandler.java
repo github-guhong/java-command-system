@@ -53,8 +53,8 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
             Boolean existValue = paramConfig.get(paramName);
             if (null != existValue) {
                 // 该参数是否存在值
-                String paramValue = "null";
-                if (existValue) {
+                String paramValue = "";
+                if (existValue && (index + 1) <= maxIndex) {
                     ++index;
                     paramValue = commandSection[index];
 

@@ -6,7 +6,8 @@ import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
-import guhong.play.commandsystem.job.system.entity.SystemCommandConfig;
+import guhong.play.commandsystem.job.file.FileIndexManage;
+import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import lombok.Data;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
  **/
 @Data
 public class CommandReloadJob implements CommandJob {
+
 
     /**
      * 获得命令的配置

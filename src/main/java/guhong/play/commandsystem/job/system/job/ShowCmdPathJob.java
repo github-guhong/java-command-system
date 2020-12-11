@@ -3,6 +3,7 @@ package guhong.play.commandsystem.job.system.job;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
+import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
@@ -21,7 +22,7 @@ public class ShowCmdPathJob implements CommandJob {
      */
     @Override
     public CommandConfig getCommandConfig() {
-        return new CommandConfig("pwd","获得当前所在目录");
+        return new SystemCommandConfig("pwd","获得当前所在目录");
     }
 
     /**

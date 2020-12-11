@@ -2,16 +2,14 @@ package guhong.play.commandsystem.job.system.job;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.exception.ExecuteException;
 import guhong.play.commandsystem.exception.NotCommandException;
 import guhong.play.commandsystem.job.CommandJob;
-import guhong.play.commandsystem.job.system.entity.SystemCommandConfig;
+import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import guhong.play.commandsystem.util.FileOperationUtil;
-import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 
 import java.util.List;

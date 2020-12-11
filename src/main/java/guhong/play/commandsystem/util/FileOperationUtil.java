@@ -132,7 +132,7 @@ public class FileOperationUtil {
                 try {
                     commandJob = ReflectUtil.newInstance(commandJobString);
                 } catch (Exception e) {
-                    PrintUtil.errorPrint("实例化["+commandKey+"]命令时出现错误，这将导致你无法使用该命令。如果该命令已删除，请使用[reload]命令重新加载命令");
+                    PrintUtil.errorPrint("实例化["+commandKey+"]命令时出现错误，"+e.getMessage()+"。这将导致你无法使用该命令。如果该命令已删除，请使用[reload]命令重新加载命令");
                 }
                 commandJobMap.put(commandKey, commandJob);
 
@@ -158,6 +158,7 @@ public class FileOperationUtil {
                 if (isDirectory) {
                     FileUtil.mkdir(file);
                 } else {
+                    FileUtil.mkParentDirs(file);
                     file.createNewFile();
                 }
             }

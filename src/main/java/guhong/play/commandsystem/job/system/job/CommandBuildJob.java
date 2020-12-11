@@ -2,15 +2,14 @@ package guhong.play.commandsystem.job.system.job;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
-import guhong.play.commandsystem.exception.ExecuteException;
 import guhong.play.commandsystem.job.CommandJob;
-import guhong.play.commandsystem.job.system.entity.SystemCommandConfig;
+import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.XmlOperationUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
@@ -37,7 +36,7 @@ public class CommandBuildJob implements CommandJob {
         Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
         paramConfig.put("-p", true);
         systemCommandConfig.setParamConfig(paramConfig);
-        systemCommandConfig.setFileIntroduce("Build.txt");
+        systemCommandConfig.setFileIntroduce("build.txt");
         return systemCommandConfig;
     }
 
@@ -77,6 +76,12 @@ public class CommandBuildJob implements CommandJob {
             if (FileUtil.exist(configPath)) {
                 FileUtil.copy(configPath, startDir.getPath() , true);
             }
+
+            // 复制document
+            String documentPath = buildProjectPath + "/document";
+            if (FileUtil.exist(documentPath)) {
+                FileUtil.copy(documentPath, startDir.getPath() , true);
+            }
             System.out.println("打包完成！");
         }
 
@@ -101,8 +106,8 @@ public class CommandBuildJob implements CommandJob {
     private String buildCommand(String buildProjectPath) {
         // 进到指定目录
         // 执行clean assembly的打包命令
-        String drive = buildProjectPath.substring(0, buildProjectPath.indexOf(":"));
+        String drive = ToolUtil.getDrive(buildProjectPath);
         return drive + ": &" +
-                "cd " + buildProjectPath + " & call mvn clean assembly:assembly"  ;
+                "cd " + buildProjectPath + " & call mvn clean assembly:assembly -Dmaven.test.skip=true"  ;
     }
 }

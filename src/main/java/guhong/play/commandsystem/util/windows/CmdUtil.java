@@ -50,7 +50,7 @@ public class CmdUtil {
      * @return 返回执行后的结果
      */
     public static Process exec(String... commands) {
-        String command = ArrayUtil.join(commands, "&");
+        String command = ArrayUtil.join(commands, " & ");
         return exec(command);
     }
 
@@ -86,11 +86,12 @@ public class CmdUtil {
         if (!FileUtil.exist(file)) {
             PrintUtil.errorPrint("windows命令执行错误: 文件不存在", true);
         }
-        String command = null;
+        String[] command = null;
+        String drive = ToolUtil.getDrive(file.getPath());
         if (file.isDirectory()) {
-            command = "explorer " + file.getPath();
+            command = new String[] {drive + ":" ,"explorer " + addQuote(file.getPath())};
         } else {
-            command = "start " + file.getPath();
+            command = new String[] {drive + ":", "start " + addQuote(file.getPath())};
         }
         return exec(command);
     }
