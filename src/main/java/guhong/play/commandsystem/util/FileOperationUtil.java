@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.exception.SystemException;
+import guhong.play.commandsystem.exception.util.FileOperationException;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
@@ -45,7 +46,7 @@ public class FileOperationUtil {
                     // 创建父目录
                     FileUtil.mkParentDirs(configFile);
                     if (!configFile.createNewFile()){
-                        throw new IOException("创建 ["+path+"] 文件失败！");
+                        throw new FileOperationException("创建 ["+path+"] 文件失败！");
                     }
                 } catch (IOException e) {
                     throw new SystemException(e.getMessage());
@@ -164,7 +165,7 @@ public class FileOperationUtil {
             }
             return file;
         } catch (Exception e) {
-            throw new RuntimeException("文件创建失败："+e.getMessage());
+            throw new FileOperationException("文件创建失败："+e.getMessage());
         }
     }
 

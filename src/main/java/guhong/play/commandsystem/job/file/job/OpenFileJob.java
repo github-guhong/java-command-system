@@ -8,6 +8,7 @@ import guhong.play.commandsystem.exception.ExecuteException;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.file.FileCommandConfig;
 import guhong.play.commandsystem.job.file.FileIndexManage;
+import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.input.InputUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
@@ -74,12 +75,12 @@ public class OpenFileJob implements CommandJob {
 
         List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName);
         if (CollectionUtil.isEmpty(fileIndexList)) {
-            String errorMessage = "没有找到["+fileName+"]。如果是新文件请使用[of reload]重新加载。";
-            throw new ExecuteException(errorMessage, command.getKey());
+            System.out.println("没有找到["+fileName+"]。如果是新文件请使用[of reload]重新加载。");
+            return;
         }
 
+        int openIndex = 0;
         // 如果找到不止一个文件，则打印出来进行选择
-        Integer openIndex = 0;
         int fileCount = fileIndexList.size();
         if (fileCount > 1) {
             System.out.println("共找到"+fileCount+"个文件，请选择：");
@@ -87,11 +88,17 @@ public class OpenFileJob implements CommandJob {
                 FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
                 System.out.println((i + 1) + "、" + fileIndex.getFilePath());
             }
-            System.out.print("请选择：");
-            openIndex = InputUtil.inputInt(1) - 1;
+            System.out.print("序号 / 重新输入文件名：");
+            String choice = InputUtil.inputNotEmpty();
+            if (ToolUtil.isInteger(choice)) {
+                openIndex = Integer.parseInt(choice);
+            } else {
+                this.run(new Command().setValueList(CollectionUtil.newArrayList(choice)));
+                return;
+            }
         }
-
         CmdUtil.openFile(fileIndexList.get(openIndex).toFile());
+
 
     }
 }

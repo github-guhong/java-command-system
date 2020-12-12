@@ -1,6 +1,7 @@
 package guhong.play.commandsystem.util;
 
 import guhong.play.commandsystem.exception.SystemException;
+import guhong.play.commandsystem.exception.util.FileOperationException;
 import lombok.Data;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -32,7 +33,7 @@ public class XmlOperationUtil {
             ex.printStackTrace();
         }
         if (null == document) {
-            throw new SystemException("项目pom文件读取失败，请检查！");
+            throw new FileOperationException("项目pom文件读取失败，请检查！");
         }
         Element rootElement = document.getRootElement();
         Element version = rootElement.element("version");

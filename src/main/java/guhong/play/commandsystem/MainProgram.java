@@ -3,6 +3,7 @@ package guhong.play.commandsystem;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.util.input.InputUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 
@@ -22,7 +23,6 @@ import java.util.Date;
  **/
 public class MainProgram {
 
-    private static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws Exception{
         // 初始化
@@ -41,7 +41,7 @@ public class MainProgram {
         System.out.println("3、你也可以在这里直接执行windows命令\n");
         while (true) {
             print();
-            String commandStr = input.readLine();
+            String commandStr = InputUtil.input();
             if (StrUtil.isBlank(commandStr)) {
                 continue;
             }

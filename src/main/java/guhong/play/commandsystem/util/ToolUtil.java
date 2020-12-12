@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
 /**
  * 工具类
@@ -87,5 +88,16 @@ public class ToolUtil {
      */
     public static String getDrive(String path) {
         return path.substring(0, path.indexOf(":"));
+    }
+
+
+    /**
+     * 是否是int
+     * @param str 字符串
+     * @return 是返回true
+     */
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 }

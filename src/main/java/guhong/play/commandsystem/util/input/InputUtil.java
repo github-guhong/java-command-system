@@ -3,9 +3,11 @@ package guhong.play.commandsystem.util.input;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 键盘输入工具
@@ -16,51 +18,80 @@ import java.io.InputStreamReader;
 public class InputUtil {
 
 
-    private static BufferedReader stream = new BufferedReader(new InputStreamReader(System.in));
+    private static BufferedReader stream = null;
 
-
-    /**
-     * 控制台输入一个字符串
-     *
-     * @param defaultValue 默认值
-     */
-    public static String input(Object defaultValue) {
+    static  {
         try {
-            String s = stream.readLine();
-            if (StrUtil.isBlank(s)) {
-                if (null == defaultValue) {
-                    while (true) {
-                        if (!StrUtil.isBlank(s)) {
-                            break;
-                        } else {
-                            s = stream.readLine();
-                        }
-                    }
-                } else {
-                    return defaultValue.toString();
-                }
-            }
-            return s;
+            stream = new BufferedReader(new InputStreamReader(System.in, "gbk"));
         } catch (Exception e) {
-            PrintUtil.errorPrint(e);
-            return "";
+            stream = new BufferedReader(new InputStreamReader(System.in));
         }
     }
 
     /**
-     * 控制台输入一个int
-     * @param defaultValue 默认值
+     * 输入一个字符串
+     * @return 返回输入的字符串
      */
-    public static Integer inputInt(Integer defaultValue) {
+    public static String input() {
         try {
-            return Integer.parseInt(input(defaultValue));
+            return stream.readLine();
         } catch (Exception e) {
-            if (null != defaultValue) {
-                PrintUtil.errorPrint("你输的不是数字，默认返回:" + defaultValue);
-                return defaultValue;
-            }
-            PrintUtil.errorPrint("能不能好好输个数字！");
+            PrintUtil.errorPrint(e);
             return null;
+        }
+    }
+
+    /**
+     * 输入一个字符串，不能为空，如果是空则循环输入
+     * @return 返回输入的字符串
+     */
+    public static String inputNotEmpty() {
+        String str = input();
+        while (StrUtil.isBlank(str)) {
+            str = input();
+        }
+        return str;
+    }
+
+    /**
+     * 输入一个字符串,可以指定默认值，如果为空则返回默认值
+     * @return 返回输入的字符串
+     */
+    public static String inputDefault(@NonNull String defaultValue) {
+        String str = input();
+        if (StrUtil.isBlank(str)) {
+            str = defaultValue;
+        }
+        return str;
+    }
+
+
+    /**
+     * 控制台输入一个int
+     * @return 返回输入的int
+     */
+    public static Integer inputInt() {
+        try {
+            String str = input();
+            if (StrUtil.isNotBlank(str)) {
+                return Integer.parseInt(str);
+            } else {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("能不能好好输个数字！");
+        }
+    }
+
+    /**
+     * 控制台输入不为空的int
+     * @return 返回输入的int
+     */
+    public static Integer inputIntNotEmpty() {
+        try {
+            return Integer.parseInt(inputNotEmpty());
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("能不能好好输个数字！");
         }
     }
 
@@ -70,9 +101,23 @@ public class InputUtil {
      * @return 是y返回true
      */
     public static boolean isY(String choice) {
-        if (choice.toLowerCase().equals("y") || choice.toLowerCase().equals("yes")) {
-            return true;
+        return isChoice(choice, "yes","y");
+    }
+
+    /**
+     * 是否是指定的值
+     * @param choice 选择的值
+     * @param values 判断的值
+     * @return 是返回true
+     */
+    public static boolean isChoice(String choice, String... values) {
+        for (String value : values) {
+            if (choice.toLowerCase().equals(value.toLowerCase())) {
+                return true;
+            }
         }
         return false;
     }
+
+
 }

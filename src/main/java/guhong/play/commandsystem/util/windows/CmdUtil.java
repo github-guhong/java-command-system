@@ -11,10 +11,7 @@ import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 
 /**
@@ -84,7 +81,8 @@ public class CmdUtil {
      */
     public static Process openFile(File file) {
         if (!FileUtil.exist(file)) {
-            PrintUtil.errorPrint("windows命令执行错误: 文件不存在", true);
+            PrintUtil.errorPrint("windows命令执行错误: 文件不存在");
+            return null;
         }
         String[] command = null;
         String drive = ToolUtil.getDrive(file.getPath());
@@ -106,17 +104,22 @@ public class CmdUtil {
         if (null == process) {
             return ;
         }
+
         InputStream inputStream = process.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        String tmp = null;
+        InputStream errorStream = process.getErrorStream();
+        SequenceInputStream mergeInputStream = new SequenceInputStream(inputStream, errorStream);
+
+        BufferedReader bufferedReader = null;
         try {
-            while ((tmp = br.readLine()) != null) {
+            bufferedReader = new BufferedReader(new InputStreamReader(mergeInputStream,"gbk"));
+            String tmp = null;
+            while ((tmp = bufferedReader.readLine()) != null) {
                 System.out.println(tmp);
             }
         } catch (Exception e) {
             //
         } finally {
-            IoUtil.close(br);
+            IoUtil.close(bufferedReader);
             IoUtil.close(inputStream);
         }
     }
@@ -179,7 +182,7 @@ public class CmdUtil {
      *
      * @param batCommandModel 命令模板
      */
-    public static boolean executeTempBat(String batCommandModel) {
+    public static Boolean executeTempBat(String batCommandModel) {
         batCommandModel += "\n exit";
 
         FileOperationUtil.createDir(Constant.TEMP_PATH);

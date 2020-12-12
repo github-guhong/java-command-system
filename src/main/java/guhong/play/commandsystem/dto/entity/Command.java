@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
  * @date : 2019-11-20 22:32
  **/
 @Data
+@Accessors(chain = true)
 public class Command {
 
     /**
