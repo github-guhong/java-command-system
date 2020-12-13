@@ -54,10 +54,10 @@ public class CommandHelpJob implements CommandJob {
             throw new NotCommandException(value);
         }
         CommandConfig commandConfig = commandJob.getCommandConfig();
-        System.out.println("=========="+value + "命令帮助==========");
-        System.out.println("描述：");
+        PrintUtil.println("=========="+value + "命令帮助==========");
+        PrintUtil.println("描述：");
         PrintUtil.printChapter(commandConfig.getDescription());
-        System.out.println("介绍：");
+        PrintUtil.println("介绍：");
         String introduce = commandConfig.getIntroduce();
         if (introduce.startsWith("file:")) {
             String documentPath = introduce.substring(introduce.indexOf(":")+1);
@@ -68,6 +68,6 @@ public class CommandHelpJob implements CommandJob {
             }
         }
         PrintUtil.printChapter(introduce);
-        System.out.println("==============================");
+        PrintUtil.println("==============================");
     }
 }

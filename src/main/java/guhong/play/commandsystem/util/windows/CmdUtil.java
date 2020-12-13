@@ -114,7 +114,7 @@ public class CmdUtil {
             bufferedReader = new BufferedReader(new InputStreamReader(mergeInputStream,"gbk"));
             String tmp = null;
             while ((tmp = bufferedReader.readLine()) != null) {
-                System.out.println(tmp);
+                PrintUtil.println(tmp);
             }
         } catch (Exception e) {
             //

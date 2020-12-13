@@ -72,17 +72,35 @@ public class Command {
     }
 
     /**
+     * 获得第二个值
+     * @return 返回第二个值
+     */
+    public String getSecondValue() {
+        return getValue(1);
+    }
+
+
+    /**
+     * 获得第三个值
+     * @return 返回第撒个值
+     */
+    public String getThirdValue() {
+        return getValue(2);
+    }
+
+    /**
      * 获得指定索引下的值
      * @param index 索引
      * @return 返回指定索引下的值
      */
     public String getValue(int index) {
         if (CollectionUtil.isNotEmpty(valueList)) {
+            if (valueList.size() <= index) {
+                return null;
+            }
             String value = valueList.get(index);
-            if (StrUtil.isNotBlank(value)) {
-                if (ToolUtil.isBlankParam(value)) {
-                    return "";
-                }
+            if (ToolUtil.isBlankParam(value)) {
+                return "";
             }
             return value;
         }

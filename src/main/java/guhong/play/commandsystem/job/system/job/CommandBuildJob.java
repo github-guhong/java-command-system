@@ -11,6 +11,7 @@ import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.XmlOperationUtil;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
@@ -61,7 +62,7 @@ public class CommandBuildJob implements CommandJob {
 
 
         // 开始打包
-        System.out.println("开始打包。。。");
+        PrintUtil.println("开始打包。。。");
         String commandModel = buildCommand(buildProjectPath);
         Process process = CmdUtil.exec(commandModel);
         CmdUtil.printProcess(process);
@@ -82,7 +83,7 @@ public class CommandBuildJob implements CommandJob {
             if (FileUtil.exist(documentPath)) {
                 FileUtil.copy(documentPath, startDir.getPath() , true);
             }
-            System.out.println("打包完成！");
+            PrintUtil.println("打包完成！");
         }
 
     }

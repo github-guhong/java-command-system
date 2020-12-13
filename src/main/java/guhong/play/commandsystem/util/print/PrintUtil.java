@@ -1,6 +1,8 @@
 package guhong.play.commandsystem.util.print;
 
 import cn.hutool.core.util.ArrayUtil;
+import guhong.play.commandsystem.CommandManager;
+import guhong.play.commandsystem.gui.interfaces.Terminal;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -24,7 +26,7 @@ public class PrintUtil {
         try {
             Thread.sleep(second * 1000);
         } catch (Exception e) {
-            System.out.println("延时打印出错: "+e.getMessage());
+            println("延时打印出错: "+e.getMessage());
         }
         print(message, isLn);
     }
@@ -90,10 +92,11 @@ public class PrintUtil {
      * @param isLn 是否换行
      */
     public static void print(String message , boolean isLn) {
+        Terminal terminal = CommandManager.getTerminal();
         if (isLn) {
-            System.out.println(message);
+            terminal.println(message);
         } else {
-            System.out.print(message);
+            terminal.print(message);
         }
     }
 
@@ -215,5 +218,6 @@ public class PrintUtil {
         String joinStr = ArrayUtil.join(array, ", ");
         println(joinStr);
     }
+
 
 }

@@ -3,6 +3,7 @@ package guhong.play.commandsystem;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.gui.MainWindow;
 import guhong.play.commandsystem.util.input.InputUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
@@ -24,47 +25,10 @@ import java.util.Date;
 public class MainProgram {
 
 
-    public static void main(String[] args) throws Exception{
-        // 初始化
-        System.out.println("欢迎使用Java命令系统");
-        System.out.println("正在加载命令（第一次执行可能需要点时间）...");
-        CommandManager.init();
-
-        // 定位到C盘
-//        CmdUtil.exec("C:");
-        System.out.println("加载完成。");
-
-        // 打印说明信息
-        System.out.println("\n帮助：");
-        System.out.println("1、可以通过 [list] 命令查看当前系统的所有命令。");
-        System.out.println("2、可以通过 [help 命令] 命令查看指定命令的帮助信息");
-        System.out.println("3、你也可以在这里直接执行windows命令\n");
-        while (true) {
-            print();
-            String commandStr = InputUtil.input();
-            if (StrUtil.isBlank(commandStr)) {
-                continue;
-            }
-            if ("exit".equals(commandStr)) {
-                break;
-            }
-            try {
-                CommandManager.execute(commandStr);
-            } catch (Exception e) {
-                PrintUtil.errorPrint(e);
-            }
-        }
-        System.out.println("告辞！");
+    public static void main(String[] args) {
+        new MainWindow();
     }
 
-
-    private static void print() {
-        String userName = System.getProperty("user.name");
-        String currentDir = CmdUtil.getCurrentPath();
-        currentDir = currentDir.substring(currentDir.lastIndexOf("/")+1);
-        String now = DateUtil.format(new Date(), "yyyy-MM-dd HH-mm");
-        System.out.print(userName + "#" + now + " " + currentDir + "/ : ");
-    }
 }
 
 

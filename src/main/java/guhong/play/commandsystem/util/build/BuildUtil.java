@@ -1,6 +1,7 @@
 package guhong.play.commandsystem.util.build;
 
 import cn.hutool.core.io.FileUtil;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
@@ -32,7 +33,7 @@ public class BuildUtil {
         String versionNumber = name.substring(name.lastIndexOf("-")+1, name.lastIndexOf("."));
 
         String command = "mvn install:install-file -Dfile="+jarPath+" -DgroupId="+groupId+" -DartifactId="+projectName+" -Dversion="+versionNumber+" -Dpackaging=jar";
-        System.out.println(command);
+        PrintUtil.println(command);
         Process process = CmdUtil.exec(command);
         CmdUtil.printProcess(process);
         return CmdUtil.isSuccess(process);

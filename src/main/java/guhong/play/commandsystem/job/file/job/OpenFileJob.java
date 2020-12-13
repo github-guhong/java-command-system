@@ -4,12 +4,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
-import guhong.play.commandsystem.exception.ExecuteException;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.file.FileCommandConfig;
 import guhong.play.commandsystem.job.file.FileIndexManage;
-import guhong.play.commandsystem.util.ToolUtil;
-import guhong.play.commandsystem.util.input.InputUtil;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
@@ -75,30 +73,36 @@ public class OpenFileJob implements CommandJob {
 
         List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName);
         if (CollectionUtil.isEmpty(fileIndexList)) {
-            System.out.println("没有找到["+fileName+"]。如果是新文件请使用[of reload]重新加载。");
+            PrintUtil.println("没有找到["+fileName+"]。如果是新文件请使用[of reload]重新加载。");
             return;
         }
 
+        String openIndexStr = command.getSecondValue();
         int openIndex = 0;
+        if (null != openIndexStr) {
+            openIndex = Integer.parseInt(openIndexStr) - 1;
+        }
         // 如果找到不止一个文件，则打印出来进行选择
         int fileCount = fileIndexList.size();
         if (fileCount > 1) {
-            System.out.println("共找到"+fileCount+"个文件，请选择：");
+            PrintUtil.println("共找到"+fileCount+"个文件");
             for (int i = 0; i < fileIndexList.size(); i++) {
                 FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
-                System.out.println((i + 1) + "、" + fileIndex.getFilePath());
+                PrintUtil.println((i + 1) + "、" + fileIndex.getFilePath());
             }
-            System.out.print("序号 / 重新输入文件名：");
-            String choice = InputUtil.inputNotEmpty();
-            if (ToolUtil.isInteger(choice)) {
-                openIndex = Integer.parseInt(choice);
-            } else {
-                this.run(new Command().setValueList(CollectionUtil.newArrayList(choice)));
-                return;
-            }
+            // 窗口模式下会堵塞
+//            PrintUtil.print("序号 / 重新输入文件名：");
+//            String choice = InputUtil.inputNotEmpty();
+//            if (ToolUtil.isInteger(choice)) {
+//                openIndex = Integer.parseInt(choice);
+//            } else {
+//                this.run(new Command().setValueList(CollectionUtil.newArrayList(choice)));
+//                return;
+//            }
         }
-        CmdUtil.openFile(fileIndexList.get(openIndex).toFile());
-
+        if (fileCount == 1 || null != openIndexStr && openIndex >= 0) {
+            CmdUtil.openFile(fileIndexList.get(openIndex).toFile());
+        }
 
     }
 }

@@ -4,17 +4,16 @@ import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
-import guhong.play.commandsystem.util.print.PrintUtil;
-import guhong.play.commandsystem.util.windows.CmdUtil;
+import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
 
 /**
- * 显示当前cmd所在路径命令
+ * 结束终端工作
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 @Data
-public class ShowCmdPathJob implements CommandJob {
+public class ExitJob implements CommandJob {
 
     /**
      * 获得命令的配置
@@ -23,7 +22,7 @@ public class ShowCmdPathJob implements CommandJob {
      */
     @Override
     public CommandConfig getCommandConfig() {
-        return new SystemCommandConfig("pwd","获得当前所在目录");
+        return new SystemCommandConfig("exit", "结束程序");
     }
 
     /**
@@ -33,7 +32,6 @@ public class ShowCmdPathJob implements CommandJob {
      */
     @Override
     public void run(Command command) {
-        String currentPath = CmdUtil.getCurrentPath();
-        PrintUtil.println(currentPath+"\n");
+        ToolUtil.shutdown();
     }
 }

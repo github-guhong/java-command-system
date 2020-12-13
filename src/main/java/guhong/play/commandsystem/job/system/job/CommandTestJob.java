@@ -5,6 +5,7 @@ import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
 import java.util.Map;
@@ -41,12 +42,12 @@ public class CommandTestJob implements CommandJob {
      */
     @Override
     public void run(Command command) {
-        System.out.println("commandKey："+command.getKey());
+        PrintUtil.println("commandKey："+command.getKey());
         Map<String, String> params = command.getParams();
-        System.out.println("commandParam: ");
+        PrintUtil.println("commandParam: ");
         for (String key : params.keySet()) {
-            System.out.println("key: "+key + " | value: " + params.get(key) );
+            PrintUtil.println("key: "+key + " | value: " + params.get(key) );
         }
-        System.out.println("commandValue: "+ command.getValueList());
+        PrintUtil.println("commandValue: "+ command.getValueList());
     }
 }

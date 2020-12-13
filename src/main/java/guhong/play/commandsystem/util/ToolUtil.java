@@ -1,11 +1,15 @@
 package guhong.play.commandsystem.util;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.job.CommandJob;
+import guhong.play.commandsystem.util.print.PrintUtil;
+import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.regex.Pattern;
@@ -99,5 +103,21 @@ public class ToolUtil {
     public static boolean isInteger(String str) {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
+    }
+
+    public static String getHeadInfo() {
+        String userName = System.getProperty("user.name");
+        String currentDir = CmdUtil.getCurrentPath();
+        currentDir = currentDir.substring(currentDir.lastIndexOf("/")+1);
+        String now = DateUtil.format(new Date(), "yyyy-MM-dd HH-mm");
+        return userName + "#" + now + " " + currentDir + "/ : ";
+    }
+
+    /**
+     * 关机
+     */
+    public static void shutdown() {
+        PrintUtil.print("告辞！");
+        System.exit(0);
     }
 }

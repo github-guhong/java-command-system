@@ -8,6 +8,7 @@ import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.file.FileIndexManage;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -45,6 +46,6 @@ public class CommandReloadJob implements CommandJob {
             value = ArrayUtil.toArray(valueList, String.class);
         }
         CommandManager.getCommandDto().reload(value);
-        System.out.println("重新加载成功，使用[list]命令查看当前所有命令信息");
+        PrintUtil.println("重新加载成功，使用[list]命令查看当前所有命令信息");
     }
 }

@@ -11,6 +11,7 @@ import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
+import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -58,7 +59,7 @@ public class DefaultCommandDto implements CommandDto{
                 CommandJob commandJob = ReflectUtil.newInstance(subClass);
                 CommandConfig commandConfig = commandJob.getCommandConfig();
                 if (null == commandConfig) {
-                    System.out.println("warn:" + commandJob.getClass() + "没有配置命令，该命令将无法使用！");
+                    PrintUtil.println("warn:" + commandJob.getClass() + "没有配置命令，该命令将无法使用！");
                 } else {
                     String commandKey = commandConfig.getCommandKey();
                     String group = commandConfig.getGroup();

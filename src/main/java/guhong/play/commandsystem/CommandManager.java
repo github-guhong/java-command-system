@@ -4,6 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.exception.SystemException;
+import guhong.play.commandsystem.gui.interfaces.Terminal;
 import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.job.CommandJob;
@@ -13,6 +14,7 @@ import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author : 李双凯
@@ -33,6 +35,13 @@ public class CommandManager {
      */
     @Getter
     private static CommandDto commandDto = null;
+
+    /**
+     * 终端对象
+     */
+    @Getter
+    @Setter
+    private static Terminal terminal;
 
 
     private CommandManager() {}

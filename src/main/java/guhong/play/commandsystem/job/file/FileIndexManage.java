@@ -75,7 +75,7 @@ public class FileIndexManage {
                     if (isIgnore(file.getPath())) {
                         continue;
                     }
-                    System.out.println(file.getName() + ":" + file.getPath());
+                    PrintUtil.println(file.getName() + ":" + file.getPath());
                     // 添加到索引
                     fileIndex.add(new FileIndex(file));
                 }
@@ -131,13 +131,13 @@ public class FileIndexManage {
             int newSize = directoryList.size();
             if (newSize > oldSize) {
                 // 说明有新路径
-                System.out.println("成功添加" + (newSize - oldSize) + "个快捷目录,正在自动创建索引。。。");
+                PrintUtil.println("成功添加" + (newSize - oldSize) + "个快捷目录,正在自动创建索引。。。");
                 this.reload(directoryValue);
-                System.out.println("创建成功！");
+                PrintUtil.println("创建成功！");
                 return;
             }
         }
-        System.out.println("指定的路径以存在，无需重新创建，如需更新索引请使用[of reload]");
+        PrintUtil.println("指定的路径以存在，无需重新创建，如需更新索引请使用[of reload]");
 
     }
 
@@ -149,10 +149,10 @@ public class FileIndexManage {
      */
     public List<FileIndex> get(String fileName) {
         if (CollectionUtil.isEmpty(fileIndex)) {
-            System.out.println("文件索引不存在，正在重新创建。。。");
+            PrintUtil.println("文件索引不存在，正在重新创建。。。");
             this.reload(null);
             if (CollectionUtil.isNotEmpty(fileIndex)) {
-                System.out.println("创建完成！");
+                PrintUtil.println("创建完成！");
             } else {
                 throw new SystemException("没有找到任何文件，这是不合理的！");
             }
