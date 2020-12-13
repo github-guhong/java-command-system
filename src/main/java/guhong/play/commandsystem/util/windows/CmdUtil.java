@@ -84,14 +84,14 @@ public class CmdUtil {
             PrintUtil.errorPrint("windows命令执行错误: 文件不存在");
             return null;
         }
-        String[] command = null;
+        String[] commands = null;
         String drive = ToolUtil.getDrive(file.getPath());
         if (file.isDirectory()) {
-            command = new String[] {drive + ":" ,"explorer " + addQuote(file.getPath())};
+            commands = new String[] {drive + ":" ,"explorer " + formatValue(file.getPath())};
         } else {
-            command = new String[] {drive + ":", "start " + addQuote(file.getPath())};
+            commands = new String[] {drive + ":", "start " + formatValue(file.getPath())};
         }
-        return exec(command);
+        return exec(commands);
     }
 
 

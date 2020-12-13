@@ -22,7 +22,7 @@ public class InputUtil {
 
     static  {
         try {
-            stream = new BufferedReader(new InputStreamReader(System.in, "gbk"));
+            stream = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         } catch (Exception e) {
             stream = new BufferedReader(new InputStreamReader(System.in));
         }
