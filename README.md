@@ -48,6 +48,10 @@
 
 ```
 config  				// 配置文件目录
+	file
+		config.json 	// of命令相关配置
+	command-data.json 	// 命令数据文件
+	config.json			// 系统配置文件
 document 				// 命令文档目录，存放命令的介绍
 start 					// 启动文件目录
 	config 				// 运行时的配置目录，和上面同理
@@ -68,15 +72,13 @@ execption	// 存放异常
 executor	// 存放命令执行器，用于执行命令，可扩展
 gui			// 窗体相关文件
 job			// 存放“工作”对象，工作既一个命令要执行的事情
-	system	// 存放系统命令
-	file	// 存放文件相关命令
 parse		// 存放命令解析器，用于解析命令，可扩展
 util		// 存放工具类
 ```
 
 
 
-## 五、运行流程
+## 五、命令运行流程
 
 ```
 初始化：
@@ -308,7 +310,7 @@ util		// 存放工具类
 
 
 
-### 七、命令数据的数据结构
+### 七）、命令数据的数据结构
 
 ​	命令的数据结构是这样的`Map<String, Map<String,CommandJob>>`
 
@@ -323,7 +325,175 @@ value:
 
 
 
-八、
+### 八）、CommandManager
+
+​	顾名思义，命令管理器，命令的执行从这里开始。
+
+​	它包含系统配置对象、命令传输对象（[CommandDto](#六）、CommandDto)）以及终端对象（[Terminal]()）
+
+
+
+
+
+### 九）、GUI相关
+
+​	2.0版本使用了窗体的界面，这样会有更好的交互，同样也会有很多的问题，所以`2.0`是个不稳定的版本，要
+
+使用的话请选择`2.1.0`
+
+​		
+
+#### 1、Terminal
+
+​	一个抽象话的终端接口，个人实力优先，对gui并不了解，所以希望可以把终端这个概念抽离出来。
+
+​	默认情况下使用`TextAreaTerminal`文本域作为终端页面。
+
+```java
+
+/**
+ * 终端接口
+ * @author : 李双凯
+ * @date : 2019-11-20 22:32
+ **/
+public interface Terminal {
+
+
+    /**
+     * 终端上打印
+     * @param message 打印的信息
+     */
+    public void print(String message);
+
+    /**
+     * 终端上换行打印
+     * @param message 打印的消息
+     */
+    public void println(String message);
+
+    /**
+     * 清空打印
+     */
+    public void clear();
+
+    /**
+     * 获得键盘监听处理器列表
+     * @return 返回键盘监听处理器列表
+     */
+    public default KeyListenerHandlerList getKeyListenerHandlerList() {
+        return Singleton.get(KeyListenerHandlerList.class);
+    }
+
+
+    /**
+     * 获得命令上下文
+     * @return 返回命令上下文
+     */
+    public default CommandContent getCommandContent() {
+        return Singleton.get(DefaultCommandContent.class);
+    }
+}
+
+```
+
+
+
+#### 2、KeyListenerHandler
+
+​	按键监听处理器，我希望在扩展的时候不需要修改核心逻辑，所以对于键盘监听抽象出来，只需要实现这个
+
+处理器就能实现对某个按键的监听。
+
+​	为了系统正常运行，请不要修改系统自带一下键盘监听处理器。如：`EnterHandler`、`BackspaceHandler`
+
+的监听
+
+​	**注意**：实现该接口的类必须要在`guhong.play.commandsystem.gui.key`包下。
+
+```java
+
+/**
+ * 键盘监听处理器
+ * @author : 李双凯
+ * @date : 2019-11-20 22:32
+ **/
+public interface KeyListenerHandler {
+
+    /**
+     * 是否监听
+     * @param e 事件对象
+     * @return 监听返回true
+     */
+    public boolean isListener(KeyEvent e);
+
+    /**
+     * 是否结束监听
+     * @param e 事件对象
+     * @param terminal 终端对象
+     * @return 不监听返回true
+     */
+    public boolean isExit(KeyEvent e, Terminal terminal);
+
+    /**
+     * 执行
+     * @param terminal 终端对象
+     */
+    public void execute(Terminal terminal);
+
+}
+
+```
+
+
+
+#### 3、CommandContent
+
+​	这是一个命令的上下文，既在终端中命令的内容。这是为了更加方便获取命令的内容而抽象出来的。你就可
+
+以把它看做是一个命令字符串，终端上输入的命令就是这个对象。
+
+​	同样，这也是个接口，默认情况下时候`StringBuilder`来存储。
+
+```java
+
+/**
+ * 命令上下文对象
+ * @author : 李双凯
+ * @date : 2019-11-20 22:32
+ **/
+public interface CommandContent {
+
+    /**
+     * 追加
+     * @param str 命令字符串
+     */
+    public void append(String str);
+
+    /**
+     * 删除一个字符串
+     */
+    public void delete();
+
+    /**
+     * 清空命令
+     */
+    public void clear();
+
+
+    /**
+     * 获得命令字符串
+     * @return 返回命令字符串
+     */
+    public String getCommandStr();
+}
+
+```
+
+
+
+​	
+
+​	
 
 
 
@@ -332,6 +502,8 @@ value:
 ​	终于来到了这里，了解了上面的介绍，自定义命令将变得非常简单
 
 
+
+### 一）、步骤
 
 **1、下载源码到本地**
 
@@ -351,6 +523,117 @@ value:
 
 
 
+### 二）、例子
+
+**1、下载源码到本地**
+
+​	略
+
+**2、继承CommandJob**
+
+```java
+
+
+/**
+ * 一个用于测试命令的工作
+ * @author : 李双凯
+ * @date : 2019-11-20 22:32
+ **/
+@Data
+public class CommandTestJob implements CommandJob {
+
+    /**
+     * 这个方法配置命令的一些命令
+     *
+     * @return 返回命令的配置
+     */
+    @Override
+    public CommandConfig getCommandConfig() {
+        // 设置命令的名字
+        String commandKey = "test";
+        // 设置命令的参数
+        Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
+        // 表示 -a 参数必须有一个值
+        paramConfig.put("-a", true);
+        // 表示 -f 参数的值可以为空
+        paramConfig.put("-f", false);
+        CommandConfig commandConfig = new SystemCommandConfig(commandKey, paramConfig);
+        // 设置命令的介绍
+        commandConfig.setDescription("这是一个测试命令");
+        return commandConfig;
+
+    }
+
+    /**
+     * 开始执行任务
+     *
+     * @param command 命令对象
+     */
+    @Override
+    public void run(Command command) {
+        // 这里写命令要执行的工作，也就是要做什么事情
+
+        // 这里，我们打印出命令的名字、参数和值
+        PrintUtil.println("commandKey："+command.getKey());
+        Map<String, String> params = command.getParams();
+        PrintUtil.println("commandParam: ");
+        for (String key : params.keySet()) {
+            PrintUtil.println("key: "+key + " | value: " + params.get(key) );
+        }
+        PrintUtil.println("commandValue: "+ command.getValueList());
+    }
+}
+
+```
+
+
+
+**3、reload**
+
+​	运行项目，此时输入`list`命令还无法看到我们刚才自定义的命令。所以我们输入`reload`命令重新加载命令
+
+```javacommandsystem
+
+
+guhong#2021-01-05 22-21 java-command-system/ : list
+
+//......无法看到我们刚才自定义的命令
+
+guhong#2021-01-05 22-21 java-command-system/ : reload
+重新加载成功，使用[list]命令查看当前所有命令信息
+
+guhong#2021-01-05 22-21 java-command-system/ : list
+----------------------------------------------------------------------------------------------------
+| 命令名 | 所属组 | 命令描述 | 执行命令的类 | 
+----------------------------------------------------------------------------------------------------
+// ....
+
+// 这里就出现了我们刚才自定义的命令
+| test | system | 这是一个测试命令 | class guhong.play.commandsystem.job.system.job.CommandTestJob | 
+
+// .....
+----------------------------------------------------------------------------------------------------
+
+guhong#2021-01-05 22-21 java-command-system/ : 
+```
+
+
+
+**4、打包项目**
+
+​	最后输入`build`命令，系统将自动帮你打包当前项目。
+
+```javacommandsystem
+guhong#2021-01-05 22-21 java-command-system/ : build
+// 等待一会。出现"打包完成"则表示打包成功
+```
+
+
+
+
+
+
+
 
 ## 八、下个版本需求
 
@@ -359,58 +642,48 @@ value:
 
 - 优化
 
-    - 优化光标定位 √
-
+    - 优化光标定位 √ （未能完全优化好，目前不能选中、不能方向键控制）
     - 禁止删除打印字符 √
-
     - 中文输入法导致的bug √
-
-    - 滚动条优化
-
+    - 滚动条优化 √
     - 优化窗体大小 √
-
-    - 支持实时打印
-
     - 增加单例模式，无需重复创建对象 √
-
     - of命令优化
       - 支持忽略大小写参数
       - 支持正则
-      - 支持目录查找：笔记/vue/1、基础
       - 优化打印的信息
         - 优化指定下标的情况下打印的信息
         - 优化查找成功时的打印信息
       - 支持查询当前所添加的快捷目录和忽略文件目录
+      - 解决打开文件失败bug
+      - 可以支持选择打开目录或文件
+    - 优化键盘监听代码。√ 
 
-    - 优化键盘监听代码。 
-
-      - 支持高效扩展 
+      - 支持高效扩展  √
       - 优化代码 √
+    - 解决退格时出现的StackOverflowError √
+    - 解决多个空格导致的 `error: For input string: "xxxx"` 
+    - 完善文档介绍 √
 
-    - 解决退格时出现的StackOverflowError
 
-    -  完善文档介绍
 
-    -  
 
-       
 
--  v2.2.0
 
+
+- v2.2.0
 - system组增加命令
 
     - font 设置字体
     - bg 设置背景
-
+    - history 记录历史命令
 - 支持扩展终端
-
 - 支持快捷键
 
-    - 缓存命令
     - table补全
-
 - 支持别名
-
+- 支持实时打印
+- 深度优化光标定位问题
 - 
 
 
