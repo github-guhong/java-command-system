@@ -20,10 +20,10 @@ public class DefaultCommandExecutor implements CommandExecutor {
      *
      * @param command    执行的命令
      * @param commandJob 执行的任务
-     * @exception ExecuteException 命令执行失败异常
+     * @throws ExecuteException 命令执行失败异常
      */
     @Override
-    public void execute(Command command, CommandJob commandJob)  throws ExecuteException{
+    public void execute(Command command, CommandJob commandJob) throws ExecuteException {
         if (commandJob.getCommandConfig().getIsAsynch()) {
             ToolUtil.asynchStart(command, commandJob);
         } else {

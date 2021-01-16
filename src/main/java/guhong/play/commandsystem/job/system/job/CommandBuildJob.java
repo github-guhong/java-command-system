@@ -20,6 +20,7 @@ import java.util.Map;
 
 /**
  * 构建工作，重新构建项目
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -55,7 +56,7 @@ public class CommandBuildJob implements CommandJob {
         String version = XmlOperationUtil.getMavenVersion(buildProjectPath);
 
         // 文件检查
-        String projectName = buildProjectPath.substring(buildProjectPath.lastIndexOf(File.separator)+1);
+        String projectName = buildProjectPath.substring(buildProjectPath.lastIndexOf(File.separator) + 1);
         File startDir = FileOperationUtil.createDir(buildProjectPath + "/start");
         File startLibDir = FileOperationUtil.createDir(buildProjectPath + "/start/lib");
         FileOperationUtil.createFile(buildProjectPath + "/start/start.bat", getStartBatModel(projectName, version));
@@ -69,19 +70,19 @@ public class CommandBuildJob implements CommandJob {
 
         if (CmdUtil.isSuccess(process)) {
             // 复制jar文件
-            String jarFilePath = buildProjectPath + "/target/"+projectName + "-" + version + "-jar-with-dependencies.jar";
-            FileUtil.copy(jarFilePath, startLibDir.getPath() , true);
+            String jarFilePath = buildProjectPath + "/target/" + projectName + "-" + version + "-jar-with-dependencies.jar";
+            FileUtil.copy(jarFilePath, startLibDir.getPath(), true);
 
             // 复制config
             String configPath = buildProjectPath + "/config";
             if (FileUtil.exist(configPath)) {
-                FileUtil.copy(configPath, startDir.getPath() , true);
+                FileUtil.copy(configPath, startDir.getPath(), true);
             }
 
             // 复制document
             String documentPath = buildProjectPath + "/document";
             if (FileUtil.exist(documentPath)) {
-                FileUtil.copy(documentPath, startDir.getPath() , true);
+                FileUtil.copy(documentPath, startDir.getPath(), true);
             }
             PrintUtil.println("打包完成！");
         }
@@ -91,16 +92,18 @@ public class CommandBuildJob implements CommandJob {
 
     /**
      * 获得start.bat脚本的模板
+     *
      * @return 返回模板
      */
-    private String getStartBatModel(String projectName,String version) {
-        return "java -jar ./lib/"+projectName+"-"+version+"-jar-with-dependencies.jar\n" +
+    private String getStartBatModel(String projectName, String version) {
+        return "java -jar ./lib/" + projectName + "-" + version + "-jar-with-dependencies.jar\n" +
                 "\n" +
                 "exit\n";
     }
 
     /**
      * 构建命令
+     *
      * @param buildProjectPath 打包的项目地址
      * @return 返回构件号的命令
      */
@@ -109,6 +112,6 @@ public class CommandBuildJob implements CommandJob {
         // 执行clean assembly的打包命令
         String drive = ToolUtil.getDrive(buildProjectPath);
         return drive + ": &" +
-                "cd " + buildProjectPath + " & call mvn clean assembly:assembly -Dmaven.test.skip=true"  ;
+                "cd " + buildProjectPath + " & call mvn clean assembly:assembly -Dmaven.test.skip=true";
     }
 }

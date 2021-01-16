@@ -10,11 +10,12 @@ import java.util.Map;
 
 /**
  * 命令对象规则
- *  1、一个命令分为三个部分：
- *   命令名 、 命令参数 、 命令值
- *  2、命令名是必须的，其他的可以为空
- *  3、命令的参数不能是必须的
- *  4、命令的值可以多个
+ * 1、一个命令分为三个部分：
+ * 命令名 、 命令参数 、 命令值
+ * 2、命令名是必须的，其他的可以为空
+ * 3、命令的参数不能是必须的
+ * 4、命令的值可以多个
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -67,14 +68,13 @@ public class CommandConfig {
     }
 
 
-
     public CommandConfig(String commandKey, Map<String, Boolean> paramConfig) {
         this.commandKey = commandKey;
         this.paramConfig = paramConfig;
     }
 
     public void setDescription(String description) {
-        if (description.length() >  15) {
+        if (description.length() > 15) {
             description = StrUtil.sub(description, 0, 16);
         }
         this.description = description;
@@ -82,7 +82,7 @@ public class CommandConfig {
 
 
     public void setFileIntroduce(String fileName) {
-        this.setIntroduce("file:"+Constant.DOCUMENT_PATH + "/" +this.getGroup() + "/" +fileName);
+        this.setIntroduce("file:" + Constant.DOCUMENT_PATH + "/" + this.getGroup() + "/" + fileName);
     }
 
 }

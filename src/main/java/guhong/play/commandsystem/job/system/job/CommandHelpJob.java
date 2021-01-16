@@ -16,11 +16,11 @@ import java.util.List;
 
 /**
  * 帮助命令工作对象
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 public class CommandHelpJob implements CommandJob {
-
 
 
     /**
@@ -32,7 +32,7 @@ public class CommandHelpJob implements CommandJob {
     public CommandConfig getCommandConfig() {
         CommandConfig commandConfig = new SystemCommandConfig("help");
         commandConfig.setDescription("查看命令描述");
-        commandConfig.setIntroduce("-f "+ System.getProperty("user.dir") +"/src/main/resource/document/Help.txt");
+        commandConfig.setIntroduce("-f " + System.getProperty("user.dir") + "/src/main/resource/document/Help.txt");
         return commandConfig;
     }
 
@@ -54,13 +54,13 @@ public class CommandHelpJob implements CommandJob {
             throw new NotCommandException(value);
         }
         CommandConfig commandConfig = commandJob.getCommandConfig();
-        PrintUtil.println("=========="+value + "命令帮助==========");
+        PrintUtil.println("==========" + value + "命令帮助==========");
         PrintUtil.println("描述：");
         PrintUtil.printChapter(commandConfig.getDescription());
         PrintUtil.println("介绍：");
         String introduce = commandConfig.getIntroduce();
         if (introduce.startsWith("file:")) {
-            String documentPath = introduce.substring(introduce.indexOf(":")+1);
+            String documentPath = introduce.substring(introduce.indexOf(":") + 1);
             if (!FileUtil.exist(documentPath)) {
                 introduce = "介绍文件未找到，所以没有介绍！";
             } else {

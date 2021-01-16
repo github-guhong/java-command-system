@@ -16,6 +16,7 @@ import java.util.Map;
 
 /**
  * 查看命令列表工作
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -47,7 +48,7 @@ public class CommandListJob implements CommandJob {
     public void run(Command command) {
         String value = command.getParams().get("-g");
         Collection<CommandJob> commandJobList = CommandManager.getCommandDto().getCommandJobList(value);
-        List<String> columnList = CollectionUtil.newArrayList("命令名", "所属组","命令描述", "执行命令的类");
+        List<String> columnList = CollectionUtil.newArrayList("命令名", "所属组", "命令描述", "执行命令的类");
         List<List<Object>> valueList = CollectionUtil.newArrayList();
         commandJobList.forEach(commandJob -> {
             List<Object> list = CollectionUtil.newArrayList();

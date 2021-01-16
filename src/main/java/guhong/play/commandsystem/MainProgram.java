@@ -13,12 +13,12 @@ import java.io.InputStreamReader;
 import java.util.Date;
 
 /**
- *
  * 主程序
  * 初始化：
  * 加载配置——》读取命令——》构建命令管理器
  * 使用：
  * 输入命令——》解析——》验证——》命令执行器——》执行工作
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/

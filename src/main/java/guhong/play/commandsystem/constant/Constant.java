@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 常量
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -44,7 +45,7 @@ public class Constant {
     /**
      * 命令文件地址
      */
-    public static final String COMMAND_DATA_PATH =  CONFIG_PATH + "/command-data.json";
+    public static final String COMMAND_DATA_PATH = CONFIG_PATH + "/command-data.json";
 
 
 }

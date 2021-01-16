@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * 清空终端文本工作
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/

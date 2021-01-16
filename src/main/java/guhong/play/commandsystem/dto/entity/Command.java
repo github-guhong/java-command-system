@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * 命令对象
+ *
  * @date : 2019-11-20 22:32
  **/
 @Data
@@ -47,6 +48,7 @@ public class Command {
 
     /**
      * 获得指定参数的值
+     *
      * @param paramName 参数名
      * @return 返回参数值，如果没有则返回null
      */
@@ -61,10 +63,11 @@ public class Command {
             return value;
         }
         return null;
-     }
+    }
 
     /**
      * 获得第一个值
+     *
      * @return 返回第一个值
      */
     public String getFirstValue() {
@@ -73,6 +76,7 @@ public class Command {
 
     /**
      * 获得第二个值
+     *
      * @return 返回第二个值
      */
     public String getSecondValue() {
@@ -82,6 +86,7 @@ public class Command {
 
     /**
      * 获得第三个值
+     *
      * @return 返回第撒个值
      */
     public String getThirdValue() {
@@ -90,6 +95,7 @@ public class Command {
 
     /**
      * 获得指定索引下的值
+     *
      * @param index 索引
      * @return 返回指定索引下的值
      */
@@ -107,4 +113,11 @@ public class Command {
         return null;
     }
 
+    /**
+     * 获得最后一个值
+     * @return 返回最后一个值
+     */
+    public String getLastValue() {
+        return valueList.get(valueList.size() - 1);
+    }
 }

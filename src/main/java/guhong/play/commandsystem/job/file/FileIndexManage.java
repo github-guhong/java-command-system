@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.exception.SystemException;
 import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
@@ -47,7 +48,6 @@ public class FileIndexManage {
     public FileIndexManage() {
         JSONObject jsonObject = FileOperationUtil.readConfigAndParse(configPath);
         if (null == jsonObject || CollectionUtil.isEmpty(jsonObject)) {
-            PrintUtil.warnPrint("文件索引加载失败，这可能导致在使用[of]命令时需要重新加载");
             return;
         }
         this.fileIndex = jsonObject.getJSONArray("fileIndex").toJavaList(FileIndex.class);
@@ -65,19 +65,27 @@ public class FileIndexManage {
         if (StrUtil.isNotBlank(reloadPath)) {
             reloadPathList = stringToArray(reloadPath);
             checkFilePathExist(reloadPathList);
-            this.directoryList.addAll(reloadPathList);
+        }
+        if (CollectionUtil.isEmpty(reloadPathList)) {
+            return;
         }
         for (String path : reloadPathList) {
+
             // 遍历指定目
             List<File> files = getAllFile(path);
+            // 加入根目录
+            files.add(new File(path));
             if (CollectionUtil.isNotEmpty(files)) {
-                for (File file : files) {
+                for (int i = 0; i < files.size(); i++) {
+                    File file = files.get(i);
                     if (isIgnore(file.getPath())) {
                         continue;
                     }
-                    PrintUtil.println(file.getName() + ":" + file.getPath());
+
                     // 添加到索引
-                    fileIndex.add(new FileIndex(file));
+                    FileIndex fileIndex = new FileIndex(file);
+                    fileIndex.print(i+1);
+                    this.fileIndex.add(fileIndex);
                 }
             } else {
                 throw new SystemException("没有找到任何文件，这是不合理的！");
@@ -94,8 +102,17 @@ public class FileIndexManage {
      * @param ignoreValue 忽略的值
      */
     public void ignore(String ignoreValue) {
+        int oldSize = ignoreList.size();
         this.ignoreList.addAll(stringToArray(ignoreValue));
-        sync();
+        int newSize = ignoreList.size();
+        if (newSize > oldSize) {
+            PrintUtil.println("成功忽略【"+ignoreValue+"】，请使用[of reload]重新构建索引。当前添加的忽略数据有：\n"+this.ignoreList);
+        } else {
+            PrintUtil.println("该地址以被忽略，不需要重新添加。");
+            PrintUtil.println("当前添加的忽略数据有："+this.ignoreList);
+
+        }
+
     }
 
     /**
@@ -145,11 +162,17 @@ public class FileIndexManage {
      * 通过文件名获得文件索引信息，可能存在多个
      *
      * @param fileName 文件名
+     * @param type 文件类型
      * @return 返回索引信息
      */
-    public List<FileIndex> get(String fileName) {
+    public List<FileIndex> get(String fileName, FileType type) {
+        List<FileIndex> result = CollectionUtil.newArrayList();
+
         if (CollectionUtil.isEmpty(fileIndex)) {
-            PrintUtil.println("文件索引不存在，正在重新创建。。。");
+            PrintUtil.println("\n文件索引不存在，正在尝试重新创建。。。");
+            if (CollectionUtil.isEmpty(this.directoryList)) {
+                throw new SystemException("没有设置任何快捷目录。你可以通过[of -s 目录名 -i 忽略的文件]来添加快捷目录。详情请使用[help of]查看命令帮助文档");
+            }
             this.reload(null);
             if (CollectionUtil.isNotEmpty(fileIndex)) {
                 PrintUtil.println("创建完成！");
@@ -157,13 +180,50 @@ public class FileIndexManage {
                 throw new SystemException("没有找到任何文件，这是不合理的！");
             }
         }
-        List<FileIndex> result = CollectionUtil.newArrayList();
         for (FileIndex index : this.fileIndex) {
-            if (index.getFileName().contains(fileName)) {
-                result.add(index);
+            if (index.getFileName().toLowerCase().contains(fileName.toLowerCase())) {
+                if (null != type) {
+                    String filePath = index.getFilePath();
+                    if (type.checkType(filePath)) {
+                        result.add(index);
+                    }
+                } else {
+                    result.add(index);
+                }
             }
         }
         return result;
+    }
+
+
+    /**
+     * 打印文件索引列表
+     */
+    public void printFileIndexList() {
+        for (int i = 0; i < fileIndex.size(); i++) {
+            FileIndex index = this.fileIndex.get(i);
+            index.print(i+1);
+        }
+    }
+
+    /**
+     * 打印快捷目录地址
+     */
+    public void printDirectoryList() {
+        PrintUtil.println(CollectionUtil.join(directoryList, ","));
+    }
+
+    /**
+     * 打印忽略的目录地址
+     */
+    public void printIgnoreList() {
+        PrintUtil.println(CollectionUtil.join(ignoreList, ","));
+    }
+
+
+    public List<File> getAllFile(String path) {
+        final List<File> fileList = new ArrayList<>();
+        return loopFile(fileList, path);
     }
 
     /**
@@ -172,9 +232,9 @@ public class FileIndexManage {
     private void sync() {
         FileOperationUtil.createFile(configPath);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("fileIndex",fileIndex);
-        jsonObject.put("ignoreList",ignoreList);
-        jsonObject.put("directoryList",directoryList);
+        jsonObject.put("fileIndex", fileIndex);
+        jsonObject.put("ignoreList", ignoreList);
+        jsonObject.put("directoryList", directoryList);
         FileOperationUtil.coverAppendConfig(configPath, jsonObject.toJSONString());
     }
 
@@ -233,12 +293,7 @@ public class FileIndexManage {
     }
 
 
-    public List<File> getAllFile(String path) {
-        final List<File> fileList = new ArrayList<>();
-        return loopFile(fileList, path);
-    }
-
-    private List<File> loopFile(List<File> fileList , String path) {
+    private List<File> loopFile(List<File> fileList, String path) {
         if (!FileUtil.exist(path)) {
             return fileList;
         }
@@ -252,7 +307,7 @@ public class FileIndexManage {
                     continue;
                 }
                 fileList.add(tmp);
-                loopFile(fileList,tmpPath);
+                loopFile(fileList, tmpPath);
             }
         }
         return fileList;
@@ -283,10 +338,19 @@ public class FileIndexManage {
             this.filePath = file.getPath();
         }
 
-        public FileIndex(){}
+        public FileIndex() {
+        }
 
         public File toFile() {
             return new File(filePath);
+        }
+
+        public void print() {
+            print(null);
+        }
+
+        public void print(Integer i) {
+            PrintUtil.println((null == i ? "" : i + ": ") + getFileName() + ": " + getFilePath());
         }
     }
 }

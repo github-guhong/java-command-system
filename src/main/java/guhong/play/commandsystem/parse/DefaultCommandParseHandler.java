@@ -17,7 +17,7 @@ import java.util.Map;
  * 第一段：命令名
  * 第二段：参数
  * 第三段：命令值，多个
- *
+ * <p>
  * 参数和命令值的顺序可以随意
  *
  * @author : 李双凯
@@ -37,9 +37,9 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
     @Override
     public Command parse(@NonNull String commandStr, @NonNull CommandConfig commandConfig) throws ParseException {
         // 空格拆分
-        String[] commandSection = commandStr.split("\\s");
+        String[] commandSection = commandStr.split("\\s+");
         int index = 0;
-        int maxIndex = commandSection.length - 1 ;
+        int maxIndex = commandSection.length - 1;
 
         // 获得命令名
         String commandKey = commandSection[index];

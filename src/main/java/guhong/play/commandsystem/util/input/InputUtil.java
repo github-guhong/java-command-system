@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * 键盘输入工具
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -20,7 +21,7 @@ public class InputUtil {
 
     private static BufferedReader stream = null;
 
-    static  {
+    static {
         try {
             stream = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         } catch (Exception e) {
@@ -30,6 +31,7 @@ public class InputUtil {
 
     /**
      * 输入一个字符串
+     *
      * @return 返回输入的字符串
      */
     public static String input() {
@@ -43,6 +45,7 @@ public class InputUtil {
 
     /**
      * 输入一个字符串，不能为空，如果是空则循环输入
+     *
      * @return 返回输入的字符串
      */
     public static String inputNotEmpty() {
@@ -55,6 +58,7 @@ public class InputUtil {
 
     /**
      * 输入一个字符串,可以指定默认值，如果为空则返回默认值
+     *
      * @return 返回输入的字符串
      */
     public static String inputDefault(@NonNull String defaultValue) {
@@ -68,6 +72,7 @@ public class InputUtil {
 
     /**
      * 控制台输入一个int
+     *
      * @return 返回输入的int
      */
     public static Integer inputInt() {
@@ -85,6 +90,7 @@ public class InputUtil {
 
     /**
      * 控制台输入不为空的int
+     *
      * @return 返回输入的int
      */
     public static Integer inputIntNotEmpty() {
@@ -97,15 +103,17 @@ public class InputUtil {
 
     /**
      * 是否 y 或 yes
+     *
      * @param choice 选择的值
      * @return 是y返回true
      */
     public static boolean isY(String choice) {
-        return isChoice(choice, "yes","y");
+        return isChoice(choice, "yes", "y");
     }
 
     /**
      * 是否是指定的值
+     *
      * @param choice 选择的值
      * @param values 判断的值
      * @return 是返回true

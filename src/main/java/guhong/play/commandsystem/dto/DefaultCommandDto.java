@@ -22,29 +22,31 @@ import java.util.*;
  * 默认传输对象
  * 在内存中维护命令数据，使用配置文件持久化命令
  * 通过反射读取项目所有的命令工作
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 @Data
-public class DefaultCommandDto implements CommandDto{
+public class DefaultCommandDto implements CommandDto {
 
     /**
      * 命令列表
      * key: 组名
      * value :
-     *  key: 命令名字
-     *  value： 执行的工作
+     * key: 命令名字
+     * value： 执行的工作
      */
     private static Map<String, Map<String, CommandJob>> commandMap = CollectionUtil.newHashMap();
 
 
     /**
      * 加载所有工作
+     *
      * @param packagePath 指定路径，可以多个，如果为空则全盘扫描
      * @return 返回工作对象列表
      */
     @Override
-    public Map<String, Map<String,CommandJob>> load(String... packagePath) {
+    public Map<String, Map<String, CommandJob>> load(String... packagePath) {
         Map<String, Map<String, CommandJob>> result = FileOperationUtil.readCommandData();
         if (CollectionUtil.isEmpty(result)) {
             // 如果配置文件没有内容则扫描所有包，重新写入配置，这个过程可能会比较久
@@ -82,6 +84,7 @@ public class DefaultCommandDto implements CommandDto{
 
     /**
      * 重新加载工作
+     *
      * @param packagePath 指定路径，可以多个，如果为空则全盘扫描
      * @return 返回工作数据
      */
@@ -166,14 +169,15 @@ public class DefaultCommandDto implements CommandDto{
      * 将命令数据转换配置所需的格式
      * 配置文件中只存储CommandJob对象的类型，不存储序列化后的json对象，因为那样会有问题。
      * 所以配置只存类型，然后读取的时候再根据类型创建具体的对象
+     *
      * @param commandData 命令数据
      * @return 返回配置所需的格式
      */
-    private Map<String, Map<String,String>> toConfigMap(Map<String, Map<String,CommandJob>> commandData) {
-        Map<String, Map<String,String>> result = CollectionUtil.newHashMap();
+    private Map<String, Map<String, String>> toConfigMap(Map<String, Map<String, CommandJob>> commandData) {
+        Map<String, Map<String, String>> result = CollectionUtil.newHashMap();
         for (String group : commandData.keySet()) {
 
-            Map<String,String> commandJobMapString = CollectionUtil.newHashMap();
+            Map<String, String> commandJobMapString = CollectionUtil.newHashMap();
 
             Map<String, CommandJob> commandJobMap = commandData.get(group);
             for (String commandKey : commandJobMap.keySet()) {

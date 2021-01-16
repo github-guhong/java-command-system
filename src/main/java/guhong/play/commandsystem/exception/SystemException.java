@@ -4,11 +4,12 @@ import lombok.Data;
 
 /**
  * 系统异常
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 @Data
-public class SystemException extends RuntimeException{
+public class SystemException extends RuntimeException {
 
 
     /**
@@ -25,6 +26,6 @@ public class SystemException extends RuntimeException{
 
     @Override
     public String getMessage() {
-        return "系统异常："+super.getMessage();
+        return "系统异常：" + super.getMessage();
     }
 }

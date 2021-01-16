@@ -43,6 +43,7 @@ public class CmdUtil {
 
     /**
      * 执行多个命令
+     *
      * @param commands 命令列表
      * @return 返回执行后的结果
      */
@@ -87,9 +88,9 @@ public class CmdUtil {
         String[] commands = null;
         String drive = ToolUtil.getDrive(file.getPath());
         if (file.isDirectory()) {
-            commands = new String[] {drive + ":" ,"explorer " + formatValue(file.getPath())};
+            commands = new String[]{drive + ":", "explorer " + formatValue(file.getPath())};
         } else {
-            commands = new String[] {drive + ":", "start " + formatValue(file.getPath())};
+            commands = new String[]{drive + ":", "start " + formatValue(file.getPath())};
         }
         return exec(commands);
     }
@@ -102,7 +103,7 @@ public class CmdUtil {
      */
     public static void printProcess(Process process) {
         if (null == process) {
-            return ;
+            return;
         }
 
         InputStream inputStream = process.getInputStream();
@@ -111,7 +112,7 @@ public class CmdUtil {
 
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(mergeInputStream,"gbk"));
+            bufferedReader = new BufferedReader(new InputStreamReader(mergeInputStream, "gbk"));
             String tmp = null;
             while ((tmp = bufferedReader.readLine()) != null) {
                 PrintUtil.println(tmp);

@@ -2,6 +2,7 @@ package guhong.play.commandsystem.exception;
 
 /**
  * 解析错误
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -22,6 +23,6 @@ public class ParseException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "命令解析错误: "+super.getMessage();
+        return "命令解析错误: " + super.getMessage();
     }
 }

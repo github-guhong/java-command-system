@@ -9,6 +9,7 @@ import java.io.File;
 
 /**
  * 打包工具
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -18,6 +19,7 @@ public class BuildUtil {
 
     /**
      * 将jar安装到本地仓库
+     *
      * @param jarPath jar的路径
      * @param groupId 组织名
      * @return 成功返回true
@@ -30,16 +32,14 @@ public class BuildUtil {
         String name = jar.getName();
 
         String projectName = name.substring(0, name.lastIndexOf("-"));
-        String versionNumber = name.substring(name.lastIndexOf("-")+1, name.lastIndexOf("."));
+        String versionNumber = name.substring(name.lastIndexOf("-") + 1, name.lastIndexOf("."));
 
-        String command = "mvn install:install-file -Dfile="+jarPath+" -DgroupId="+groupId+" -DartifactId="+projectName+" -Dversion="+versionNumber+" -Dpackaging=jar";
+        String command = "mvn install:install-file -Dfile=" + jarPath + " -DgroupId=" + groupId + " -DartifactId=" + projectName + " -Dversion=" + versionNumber + " -Dpackaging=jar";
         PrintUtil.println(command);
         Process process = CmdUtil.exec(command);
         CmdUtil.printProcess(process);
         return CmdUtil.isSuccess(process);
     }
-
-
 
 
 }

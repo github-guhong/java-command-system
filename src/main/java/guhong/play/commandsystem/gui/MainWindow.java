@@ -1,6 +1,8 @@
 package guhong.play.commandsystem.gui;
 
+import com.sun.java.swing.plaf.motif.MotifScrollPaneUI;
 import guhong.play.commandsystem.CommandManager;
+import guhong.play.commandsystem.gui.terminal.TextAreaTerminal;
 import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 
@@ -27,7 +29,7 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
 
         // 设置终端文本域
-        TerminalTextArea terminal = new TerminalTextArea();
+        TextAreaTerminal terminal = new TextAreaTerminal();
         add(terminal, BorderLayout.CENTER);
         terminal.addKeyListener(terminal);
         terminal.addCaretListener(terminal);
@@ -39,28 +41,31 @@ public class MainWindow extends JFrame {
         // 设置滚动窗口
         JScrollPane scroll = new JScrollPane(terminal);
         scroll.setSize(this.getSize());
+        scroll.setUI(new MotifScrollPaneUI());
         scroll.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scroll);
 
         // 加载系统
         initSystem();
-        terminal.caretPosition();
+        terminal.keepCaretInTextEnd();
+        // 重新设置宽度，响应滚动条
+        this.setSize(this.getWidth() + 1, this.getHeight());
     }
 
 
     private void setWindowSize() {
-        setVisible(true);
         // 得到显示器屏幕的宽、高
         int systemWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
         int systemHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         // 得到窗体的宽、高
         int windowsWidth = this.getWidth();
         int windowsHeight = this.getHeight();
-        int finishWidth = (systemWidth - windowsWidth) / 2;
-        int finishHeight = (systemHeight - windowsHeight) / 2;
+        // 130是为了更好的显示list命令
+        int finishWidth = (systemWidth - windowsWidth) / 2 + 130;
+        int finishHeight = (systemHeight - windowsHeight) / 2 + 130;
         setSize(finishWidth, finishHeight);
     }
 
@@ -80,8 +85,8 @@ public class MainWindow extends JFrame {
         // 打印说明信息
         PrintUtil.println("\n帮助：");
         PrintUtil.println("1、可以通过 [list] 命令查看当前系统的所有命令。");
-        PrintUtil.println("2、可以通过 [help 命令] 命令查看指定命令的帮助信息");
-        PrintUtil.println("3、你也可以在这里直接执行windows命令\n");
+        PrintUtil.println("2、可以通过 [help 命令] 命令查看指定命令的帮助信息。如：[help list]");
+//        PrintUtil.println("3、你也可以在这里直接执行windows命令\n");
 
         // 打印头部信息
         PrintUtil.print(ToolUtil.getHeadInfo());

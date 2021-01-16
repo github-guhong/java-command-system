@@ -4,11 +4,12 @@ import lombok.Data;
 
 /**
  * 文件操作错误
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 @Data
-public class FileOperationException extends RuntimeException{
+public class FileOperationException extends RuntimeException {
 
 
     /**
@@ -25,6 +26,6 @@ public class FileOperationException extends RuntimeException{
 
     @Override
     public String getMessage() {
-        return "文件操作错误出现错误: "+ super.getMessage();
+        return "文件操作错误出现错误: " + super.getMessage();
     }
 }

@@ -2,7 +2,7 @@ package guhong.play.commandsystem.util.print;
 
 import cn.hutool.core.util.ArrayUtil;
 import guhong.play.commandsystem.CommandManager;
-import guhong.play.commandsystem.gui.interfaces.Terminal;
+import guhong.play.commandsystem.gui.terminal.Terminal;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 打印工具
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -18,15 +19,16 @@ public class PrintUtil {
 
     /**
      * 延时打印
-     * @param second 延时的时间，秒
+     *
+     * @param second  延时的时间，秒
      * @param message 打印的消息
-     * @param isLn 是否换行
+     * @param isLn    是否换行
      */
     public static void delayPrint(int second, String message, boolean isLn) {
         try {
             Thread.sleep(second * 1000);
         } catch (Exception e) {
-            println("延时打印出错: "+e.getMessage());
+            println("延时打印出错: " + e.getMessage());
         }
         print(message, isLn);
     }
@@ -34,7 +36,8 @@ public class PrintUtil {
 
     /**
      * 延时打印 换行
-     * @param second 延时的时间，秒
+     *
+     * @param second  延时的时间，秒
      * @param message 打印的消息
      */
     public static void delayPrint(int second, String message) {
@@ -43,16 +46,18 @@ public class PrintUtil {
 
     /**
      * 打印警告
+     *
      * @param message 打印的信息
-     * @param isLn 是否换行
+     * @param isLn    是否换行
      */
-    public static void warnPrint(String message , boolean isLn) {
-        message = "warn: "+ message;
+    public static void warnPrint(String message, boolean isLn) {
+        message = "warn: " + message;
         print(message, isLn);
     }
 
     /**
      * 打印警告 换行打印
+     *
      * @param message 打印的信息
      */
     public static void warnPrint(String message) {
@@ -61,16 +66,18 @@ public class PrintUtil {
 
     /**
      * 打印错误
+     *
      * @param message 打印的信息
-     * @param isLn 是否换行
+     * @param isLn    是否换行
      */
     public static void errorPrint(String message, boolean isLn) {
-        message = "error: "+ message;
-        printError(message, isLn);
+        message = "error: " + message;
+        print(message, isLn);
     }
 
     /**
      * 打印错误 换行打印
+     *
      * @param message 打印的信息
      */
     public static void errorPrint(String message) {
@@ -79,6 +86,7 @@ public class PrintUtil {
 
     /**
      * 打印错误 换行打印
+     *
      * @param e 打印的异常
      */
     public static void errorPrint(Exception e) {
@@ -88,10 +96,11 @@ public class PrintUtil {
 
     /**
      * 打印
+     *
      * @param message 打印的信息
-     * @param isLn 是否换行
+     * @param isLn    是否换行
      */
-    public static void print(String message , boolean isLn) {
+    public static void print(String message, boolean isLn) {
         Terminal terminal = CommandManager.getTerminal();
         if (isLn) {
             terminal.println(message);
@@ -102,6 +111,7 @@ public class PrintUtil {
 
     /**
      * 换行打印
+     *
      * @param message 打印信息
      */
     public static void println(String message) {
@@ -110,23 +120,11 @@ public class PrintUtil {
 
     /**
      * 普通打印
+     *
      * @param message 打印的消息
      */
     public static void print(String message) {
         print(message, false);
-    }
-
-    /**
-     * 打印错误信息
-     * @param message 打印的信息
-     * @param isLn 是否换行
-     */
-    private static void printError(String message , boolean isLn) {
-        if (isLn) {
-            System.err.println(message);
-        } else {
-            System.err.print(message);
-        }
     }
 
     /**
@@ -138,9 +136,10 @@ public class PrintUtil {
 
     /**
      * 打印表格
+     *
      * @param columnList 列名
-     * @param values 值
-     * @param maxLength 表格宽度，单位/字符数，默认50
+     * @param values     值
+     * @param maxLength  表格宽度，单位/字符数，默认50
      */
     public static void printTable(@NonNull List<String> columnList, List<List<Object>> values, Integer maxLength) {
         if (null == maxLength) {
@@ -156,10 +155,10 @@ public class PrintUtil {
         newLine();
 
         // 打印列名
-        print("| " , false);
+        print("| ", false);
         for (String columnName : columnList) {
             String message = columnName + " | ";
-            print(message , false);
+            print(message, false);
         }
         newLine();
         for (int i = 0; i < maxLength; i++) {
@@ -170,11 +169,11 @@ public class PrintUtil {
 
         // 打印值
         for (List<Object> objectList : values) {
-            print("| " , false);
+            print("| ", false);
             for (Object o : objectList) {
                 String value = o.toString();
                 String message = value + " | ";
-                print(message , false);
+                print(message, false);
             }
             newLine();
         }
@@ -190,6 +189,7 @@ public class PrintUtil {
 
     /**
      * 打印段落
+     *
      * @param message 打印的消息
      */
     public static void printChapter(String message) {
@@ -198,7 +198,8 @@ public class PrintUtil {
 
     /**
      * 打印一个端落开头
-     * @param space 空几个格
+     *
+     * @param space   空几个格
      * @param message 打印的消息
      */
     public static void printChapter(int space, String message) {
@@ -212,6 +213,7 @@ public class PrintUtil {
 
     /**
      * 打印数组
+     *
      * @param array 数组
      */
     public static void printArray(String... array) {

@@ -1,10 +1,12 @@
 package guhong.play.commandsystem.dto.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
  * 系统配置
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -20,6 +22,7 @@ public class SystemConfig {
 
     /**
      * 构建默认系统配置
+     *
      * @return 返回默认系统配置
      */
     public static SystemConfig buildDefaultConfig() {
@@ -30,10 +33,12 @@ public class SystemConfig {
 
     /**
      * 是否是空
+     *
      * @return 空返回true
      */
+    @JSONField(serialize = false)
     public boolean isEmpty() {
-        if (null == dto){
+        if (null == dto) {
             return true;
         }
         return false;

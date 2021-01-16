@@ -9,6 +9,7 @@ import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
+import java.sql.Struct;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -16,12 +17,12 @@ import java.util.regex.Pattern;
 
 /**
  * 工具类
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 @Data
 public class ToolUtil {
-
 
 
     private static ExecutorService singleThreadPool = new ThreadPoolExecutor(1, 100,
@@ -31,7 +32,8 @@ public class ToolUtil {
 
     /**
      * 异步运行一个工作
-     * @param command 命令
+     *
+     * @param command    命令
      * @param commandJob 工作
      */
     public static void asynchStart(Command command, CommandJob commandJob) {
@@ -46,10 +48,11 @@ public class ToolUtil {
     /**
      * 参数值是否为空
      * 用于判断命令参数的值是否为空字符串
+     *
      * @param paramValue 参数值
      * @return 是空字符串则为true
      */
-    public static Boolean isBlankParam(String paramValue){
+    public static Boolean isBlankParam(String paramValue) {
         if (paramValue.matches("\"\\s*\"")) {
             return true;
         }
@@ -59,6 +62,7 @@ public class ToolUtil {
 
     /**
      * 获得命令名
+     *
      * @param commandStr 命令字符串
      * @return 返回命令名
      */
@@ -67,7 +71,7 @@ public class ToolUtil {
             return null;
         }
         commandStr = commandStr.trim();
-        String[] split = commandStr.split("\\s");
+        String[] split = commandStr.split("\\s+");
         String commandKey = split[0];
         if (StrUtil.isBlank(commandKey)) {
             return null;
@@ -77,6 +81,7 @@ public class ToolUtil {
 
     /**
      * 获得环境变量的值
+     *
      * @param key key
      * @return 返回环境变量的值
      */
@@ -87,6 +92,7 @@ public class ToolUtil {
 
     /**
      * 获得盘符
+     *
      * @param path 路径
      * @return 返回路径所在的盘符
      */
@@ -97,10 +103,14 @@ public class ToolUtil {
 
     /**
      * 是否是int
+     *
      * @param str 字符串
      * @return 是返回true
      */
     public static boolean isInteger(String str) {
+        if (StrUtil.isBlank(str)) {
+            return false;
+        }
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
@@ -108,9 +118,9 @@ public class ToolUtil {
     public static String getHeadInfo() {
         String userName = System.getProperty("user.name");
         String currentDir = CmdUtil.getCurrentPath();
-        currentDir = currentDir.substring(currentDir.lastIndexOf("/")+1);
+        currentDir = currentDir.substring(currentDir.lastIndexOf("/") + 1);
         String now = DateUtil.format(new Date(), "yyyy-MM-dd HH-mm");
-        return userName + "#" + now + " " + currentDir + "/ : ";
+        return "\n" + userName + "#" + now + " " + currentDir + "/ : ";
     }
 
     /**

@@ -7,6 +7,8 @@ import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.file.FileCommandConfig;
 import guhong.play.commandsystem.job.file.FileIndexManage;
+import guhong.play.commandsystem.job.file.FileType;
+import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 /**
  * 打开文件/目录命令
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -34,11 +37,19 @@ public class OpenFileJob implements CommandJob {
      */
     @Override
     public CommandConfig getCommandConfig() {
-        FileCommandConfig commandConfig = new FileCommandConfig("of","帮你快速打开文件");
+        FileCommandConfig commandConfig = new FileCommandConfig("of", "帮你快速打开文件");
         Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
         paramConfig.put("reload", true);
         paramConfig.put("-i", true);
         paramConfig.put("-s", true);
+
+        paramConfig.put("-d", false);
+        paramConfig.put("-f", false);
+
+        paramConfig.put("-il", false);
+        paramConfig.put("-sl", false);
+        paramConfig.put("-fil", false);
+
         commandConfig.setFileIntroduce("of.txt");
         commandConfig.setParamConfig(paramConfig);
         return commandConfig;
@@ -52,6 +63,7 @@ public class OpenFileJob implements CommandJob {
     @Override
     public void run(Command command) {
 
+        // 处理各种参数
         String ignoreValue = command.getParamValue("-i");
         if (null != ignoreValue) {
             fileIndexManage.ignore(ignoreValue);
@@ -65,32 +77,56 @@ public class OpenFileJob implements CommandJob {
             fileIndexManage.reload(reloadValue);
         }
 
+        String fileTypeValue = null == command.getParamValue("-f") ? null : "-f";
+        String directoryTypeValue = null == command.getParamValue("-d") ? null : "-d";
+        FileType fileType = FileType.getFileType(fileTypeValue, directoryTypeValue);
 
+        String ilValue = command.getParamValue("-il");
+        if (null != ilValue) {
+            fileIndexManage.printIgnoreList();
+            return;
+        }
+        String slValue = command.getParamValue("-sl");
+        if (null != slValue) {
+            fileIndexManage.printDirectoryList();
+            return;
+        }
+        String filValue = command.getParamValue("-fil");
+        if (null != filValue) {
+            fileIndexManage.printFileIndexList();
+            return;
+        }
+
+        // 获得文件名，开始查询
         String fileName = command.getFirstValue();
         if (null == fileName) {
             return;
         }
-
-        List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName);
+        PrintUtil.println("\n查找名为[" + fileName + "]的"+ (null == fileType ? "" : fileType.getName()) + "索引");
+        List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName, fileType);
         if (CollectionUtil.isEmpty(fileIndexList)) {
-            PrintUtil.println("没有找到["+fileName+"]。如果是新文件请使用[of reload]重新加载。");
+            PrintUtil.println("\n没有找到[" + fileName + "]。如果是新文件请使用[of reload]重新加载。");
             return;
         }
 
-        String openIndexStr = command.getSecondValue();
-        int openIndex = 0;
-        if (null != openIndexStr) {
-            openIndex = Integer.parseInt(openIndexStr) - 1;
+        // 查询到数据打开文件
+        String openIndexStr = command.getLastValue();
+        Integer openIndex = null;
+        if (null != openIndexStr && ToolUtil.isInteger(openIndexStr)) {
+            try {
+                openIndex = Integer.parseInt(openIndexStr) - 1;
+            } catch (Exception e) {
+                openIndex = null;
+            }
         }
         // 如果找到不止一个文件，则打印出来进行选择
         int fileCount = fileIndexList.size();
-        if (fileCount > 1) {
-            PrintUtil.println("共找到"+fileCount+"个文件");
-            for (int i = 0; i < fileIndexList.size(); i++) {
-                FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
-                PrintUtil.println((i + 1) + "、" + fileIndex.getFilePath());
-            }
-            // 窗口模式下会堵塞
+        PrintUtil.println("\n成功找到" + fileCount + "个文件");
+        for (int i = 0; i < fileIndexList.size(); i++) {
+            FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
+            PrintUtil.println((i + 1) + "、" + fileIndex.getFilePath());
+        }
+        // 窗口模式下会堵塞
 //            PrintUtil.print("序号 / 重新输入文件名：");
 //            String choice = InputUtil.inputNotEmpty();
 //            if (ToolUtil.isInteger(choice)) {
@@ -99,10 +135,14 @@ public class OpenFileJob implements CommandJob {
 //                this.run(new Command().setValueList(CollectionUtil.newArrayList(choice)));
 //                return;
 //            }
+        if (fileCount == 1) {
+            FileIndexManage.FileIndex fileIndex = fileIndexList.get(0);
+            PrintUtil.println("\n只查到一个索引，正在打开: " + fileIndex.getFilePath());
+            CmdUtil.openFile(fileIndex.toFile());
+        } else if (null != openIndex){
+            FileIndexManage.FileIndex fileIndex = fileIndexList.get(openIndex);
+            PrintUtil.println("\n正在打开你指定的索引路径: " + fileIndex.getFilePath());
+            CmdUtil.openFile(fileIndex.toFile());
         }
-        if (fileCount == 1 || null != openIndexStr && openIndex >= 0) {
-            CmdUtil.openFile(fileIndexList.get(openIndex).toFile());
-        }
-
     }
 }

@@ -6,7 +6,6 @@ import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
-import guhong.play.commandsystem.job.file.FileIndexManage;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;

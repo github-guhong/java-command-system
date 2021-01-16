@@ -10,6 +10,7 @@ import lombok.Data;
 
 /**
  * 显示当前cmd所在路径命令
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -23,7 +24,7 @@ public class ShowCmdPathJob implements CommandJob {
      */
     @Override
     public CommandConfig getCommandConfig() {
-        return new SystemCommandConfig("pwd","获得当前所在目录");
+        return new SystemCommandConfig("pwd", "获得当前所在目录");
     }
 
     /**
@@ -34,6 +35,6 @@ public class ShowCmdPathJob implements CommandJob {
     @Override
     public void run(Command command) {
         String currentPath = CmdUtil.getCurrentPath();
-        PrintUtil.println(currentPath+"\n");
+        PrintUtil.println(currentPath + "\n");
     }
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.exception.SystemException;
-import guhong.play.commandsystem.gui.interfaces.Terminal;
+import guhong.play.commandsystem.gui.terminal.Terminal;
 import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.job.CommandJob;
@@ -17,11 +17,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 命令管理器
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
 public class CommandManager {
-
 
 
     /**
@@ -44,7 +45,8 @@ public class CommandManager {
     private static Terminal terminal;
 
 
-    private CommandManager() {}
+    private CommandManager() {
+    }
 
 
     public static void execute(String commandStr) {
@@ -68,7 +70,6 @@ public class CommandManager {
     }
 
 
-
     public static void init() {
         try {
             // 读取配置文件
@@ -88,11 +89,10 @@ public class CommandManager {
             }
             commandDto.load(null);
         } catch (Exception e) {
-            PrintUtil.errorPrint("命令管理器初始化失败："+e.getMessage());
+            PrintUtil.errorPrint("命令管理器初始化失败：" + e.getMessage());
         }
 
     }
-
 
 
 }
