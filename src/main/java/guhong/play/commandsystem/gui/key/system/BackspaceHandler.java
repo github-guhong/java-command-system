@@ -28,18 +28,7 @@ public class BackspaceHandler implements KeyListenerHandler {
         return e.getKeyCode() == KeyEvent.VK_BACK_SPACE;
     }
 
-    /**
-     * 是否结束监听
-     *
-     * @param e        事件对象
-     * @param terminal 终端对象
-     * @return 不监听返回true
-     */
-    @Override
-    public boolean isExit(KeyEvent e, Terminal terminal) {
-        String commandStr = terminal.getCommandContent().getCommandStr();
-        return StrUtil.isBlank(commandStr);
-    }
+
 
     /**
      * 执行

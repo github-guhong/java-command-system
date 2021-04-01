@@ -48,4 +48,10 @@ public class Constant {
     public static final String COMMAND_DATA_PATH = CONFIG_PATH + "/command-data.json";
 
 
+    /**
+     * 特殊字符
+     */
+    public static final String[] SPECIAL_CHAR = new String[]{"!","@","#","$","%","^","&","*","(",")","-","=","~","·"};
+
+
 }

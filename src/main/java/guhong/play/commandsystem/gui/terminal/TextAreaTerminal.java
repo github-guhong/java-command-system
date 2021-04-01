@@ -1,12 +1,15 @@
 package guhong.play.commandsystem.gui.terminal;
 
+import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
+import guhong.play.commandsystem.gui.key.type.KeyType;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
 
 /**
  * 文本域终端对象
@@ -17,14 +20,20 @@ import java.awt.event.KeyListener;
 public class TextAreaTerminal extends JTextArea implements KeyListener,
         CaretListener, Terminal {
 
+
     /**
-     * 当前输入的键盘标识
+     * 当前输入的键盘标识，因为keyTyped中拿不到code
      */
     private volatile int currentKeyCode = 0;
 
 
     public TextAreaTerminal() {
         super();
+        // 初始化
+        getCommandContent();
+        getHistoryCommand();
+        getKeyListenerHandlerManage();
+        getHistoryIndex();
     }
 
     /**
@@ -35,7 +44,10 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
     @Override
     public void keyTyped(KeyEvent e) {
         e.setKeyCode(currentKeyCode);
-        for (KeyListenerHandler keyListenerHandler : this.getKeyListenerHandlerList()) {
+
+        // 监听打印字符的按键。比如：A B C D
+        List<KeyListenerHandler> keyListenerHandlerList = this.getKeyListenerHandlerManage().get(KeyType.PRINT);
+        for (KeyListenerHandler keyListenerHandler : keyListenerHandlerList) {
             if (keyListenerHandler.isListener(e)) {
                 keyListenerHandler.execute(this);
                 return;
@@ -51,11 +63,20 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
      */
     @Override
     public void keyPressed(KeyEvent e) {
+        // 防止删除系统提示
+        String commandStr = this.getCommandContent().getCommandStr();
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && StrUtil.isBlank(commandStr)) {
+            e.consume();
+            return;
+        }
         currentKeyCode = e.getKeyCode();
-        for (KeyListenerHandler keyListenerHandler : this.getKeyListenerHandlerList()) {
-            if (keyListenerHandler.isListener(e) && keyListenerHandler.isExit(e, this)) {
-                e.consume();
-                break;
+
+        // 监听不打印字符的按键。比如: 方向键 ↑ ↓ ← →
+        List<KeyListenerHandler> keyListenerHandlerList = this.getKeyListenerHandlerManage().get(KeyType.NOT_PRINT);
+        for (KeyListenerHandler keyListenerHandler : keyListenerHandlerList) {
+            if (keyListenerHandler.isListener(e)) {
+                keyListenerHandler.execute(this);
+                return;
             }
         }
     }

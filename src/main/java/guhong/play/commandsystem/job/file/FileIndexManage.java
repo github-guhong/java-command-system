@@ -3,6 +3,7 @@ package guhong.play.commandsystem.job.file;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -45,6 +46,11 @@ public class FileIndexManage {
      */
     private String configPath = Constant.CONFIG_PATH + "/file/config.json";
 
+    /**
+     * 默认忽略路径
+     */
+    private String defaultIgnore = ".git,.jpg,.png,.jpeg,.vscode,node_modules";
+
     public FileIndexManage() {
         JSONObject jsonObject = FileOperationUtil.readConfigAndParse(configPath);
         if (null == jsonObject || CollectionUtil.isEmpty(jsonObject)) {
@@ -59,7 +65,7 @@ public class FileIndexManage {
      * 重新加载
      */
     public void reload(String reloadPath) {
-        fileIndex = CollectionUtil.newArrayList();
+//        fileIndex = CollectionUtil.newArrayList();
 
         Collection<String> reloadPathList = directoryList;
         if (StrUtil.isNotBlank(reloadPath)) {
@@ -154,7 +160,7 @@ public class FileIndexManage {
                 return;
             }
         }
-        PrintUtil.println("指定的路径以存在，无需重新创建，如需更新索引请使用[of reload]");
+        PrintUtil.println("指定的路径以存在，无需重新创建，如需更新索引请使用[of reload "+directoryValue+"]");
 
     }
 
@@ -163,9 +169,10 @@ public class FileIndexManage {
      *
      * @param fileName 文件名
      * @param type 文件类型
+     * @param isEqual 是否完全匹配
      * @return 返回索引信息
      */
-    public List<FileIndex> get(String fileName, FileType type) {
+    public List<FileIndex> get(String fileName, FileType type, boolean isEqual) {
         List<FileIndex> result = CollectionUtil.newArrayList();
 
         if (CollectionUtil.isEmpty(fileIndex)) {
@@ -181,7 +188,18 @@ public class FileIndexManage {
             }
         }
         for (FileIndex index : this.fileIndex) {
-            if (index.getFileName().toLowerCase().contains(fileName.toLowerCase())) {
+            boolean isExist = false;
+            if (isEqual) {
+                if (index.getFileName().toLowerCase().equals(fileName.toLowerCase())) {
+                    isExist = true;
+                }
+            } else {
+                if (index.getFileName().toLowerCase().contains(fileName.toLowerCase())) {
+                    isExist = true;
+                }
+            }
+
+            if (isExist) {
                 if (null != type) {
                     String filePath = index.getFilePath();
                     if (type.checkType(filePath)) {
@@ -191,6 +209,7 @@ public class FileIndexManage {
                     result.add(index);
                 }
             }
+
         }
         return result;
     }

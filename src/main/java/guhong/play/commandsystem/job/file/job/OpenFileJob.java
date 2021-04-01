@@ -45,6 +45,8 @@ public class OpenFileJob implements CommandJob {
 
         paramConfig.put("-d", false);
         paramConfig.put("-f", false);
+        paramConfig.put("-e", false);
+
 
         paramConfig.put("-il", false);
         paramConfig.put("-sl", false);
@@ -80,6 +82,8 @@ public class OpenFileJob implements CommandJob {
         String fileTypeValue = null == command.getParamValue("-f") ? null : "-f";
         String directoryTypeValue = null == command.getParamValue("-d") ? null : "-d";
         FileType fileType = FileType.getFileType(fileTypeValue, directoryTypeValue);
+        boolean isEqual = null != command.getParamValue("-e");
+
 
         String ilValue = command.getParamValue("-il");
         if (null != ilValue) {
@@ -102,8 +106,9 @@ public class OpenFileJob implements CommandJob {
         if (null == fileName) {
             return;
         }
+        fileName = fileName.trim();
         PrintUtil.println("\n查找名为[" + fileName + "]的"+ (null == fileType ? "" : fileType.getName()) + "索引");
-        List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName, fileType);
+        List<FileIndexManage.FileIndex> fileIndexList = fileIndexManage.get(fileName, fileType, isEqual);
         if (CollectionUtil.isEmpty(fileIndexList)) {
             PrintUtil.println("\n没有找到[" + fileName + "]。如果是新文件请使用[of reload]重新加载。");
             return;

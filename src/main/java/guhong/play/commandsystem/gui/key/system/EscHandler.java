@@ -1,6 +1,7 @@
 package guhong.play.commandsystem.gui.key.system;
 
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
+import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
@@ -27,17 +28,6 @@ public class EscHandler implements KeyListenerHandler {
         return e.getKeyCode() == KeyEvent.VK_ESCAPE;
     }
 
-    /**
-     * 是否结束监听
-     *
-     * @param e        事件对象
-     * @param terminal 终端对象
-     * @return 不监听返回true
-     */
-    @Override
-    public boolean isExit(KeyEvent e, Terminal terminal) {
-        return false;
-    }
 
     /**
      * 执行

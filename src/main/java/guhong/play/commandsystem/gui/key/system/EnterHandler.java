@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.gui.command.CommandContent;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
+import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
@@ -32,16 +33,13 @@ public class EnterHandler implements KeyListenerHandler {
     }
 
     /**
-     * 是否结束监听
-     *
-     * @param e        事件对象
-     * @param terminal 终端对象
-     * @return 不监听返回true
+     * 监听类型
      */
     @Override
-    public boolean isExit(KeyEvent e, Terminal terminal) {
-        return false;
+    public KeyType type() {
+        return KeyType.PRINT;
     }
+
 
     /**
      * 执行
@@ -56,6 +54,10 @@ public class EnterHandler implements KeyListenerHandler {
             try {
                 // 执行命令
                 CommandManager.execute(commandStr);
+
+                // 记录历史,刷新索引
+                terminal.getHistoryCommand().add(commandStr);
+                terminal.getHistoryIndex().flush();
             } catch (Exception exception) {
                 PrintUtil.errorPrint(exception);
             } finally {

@@ -3,7 +3,9 @@ package guhong.play.commandsystem.gui.terminal;
 import cn.hutool.core.lang.Singleton;
 import guhong.play.commandsystem.gui.command.CommandContent;
 import guhong.play.commandsystem.gui.command.DefaultCommandContent;
-import guhong.play.commandsystem.gui.key.KeyListenerHandlerList;
+import guhong.play.commandsystem.gui.history.CommandHistoryList;
+import guhong.play.commandsystem.gui.history.HistoryIndex;
+import guhong.play.commandsystem.gui.key.KeyListenerHandlerManage;
 
 /**
  * 终端接口
@@ -34,12 +36,12 @@ public interface Terminal {
     public void clear();
 
     /**
-     * 获得键盘监听处理器列表
+     * 获得键盘监听处理器管理器
      *
      * @return 返回键盘监听处理器列表
      */
-    public default KeyListenerHandlerList getKeyListenerHandlerList() {
-        return Singleton.get(KeyListenerHandlerList.class);
+    public default KeyListenerHandlerManage getKeyListenerHandlerManage() {
+        return Singleton.get(KeyListenerHandlerManage.class);
     }
 
 
@@ -51,4 +53,22 @@ public interface Terminal {
     public default CommandContent getCommandContent() {
         return Singleton.get(DefaultCommandContent.class);
     }
+
+    /**
+     * 获得历史列表
+     * @return 返回历史列表
+     */
+    public default CommandHistoryList getHistoryCommand() {
+        return Singleton.get(CommandHistoryList.class);
+    }
+
+    /**
+     * 命令历史的索引位置
+     * @return 返回索引
+     */
+    public default HistoryIndex getHistoryIndex() {
+        return Singleton.get(HistoryIndex.class);
+    }
+
+
 }

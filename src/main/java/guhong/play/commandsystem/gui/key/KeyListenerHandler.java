@@ -1,5 +1,7 @@
 package guhong.play.commandsystem.gui.key;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 
 import java.awt.event.KeyEvent;
@@ -21,13 +23,11 @@ public interface KeyListenerHandler {
     public boolean isListener(KeyEvent e);
 
     /**
-     * 是否结束监听
-     *
-     * @param e        事件对象
-     * @param terminal 终端对象
-     * @return 不监听返回true
+     * 监听类型
      */
-    public boolean isExit(KeyEvent e, Terminal terminal);
+    public default KeyType type() {
+        return KeyType.NOT_PRINT;
+    }
 
     /**
      * 执行
