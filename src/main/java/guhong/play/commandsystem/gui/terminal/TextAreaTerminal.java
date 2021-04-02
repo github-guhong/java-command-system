@@ -29,10 +29,6 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
 
     public TextAreaTerminal() {
         super();
-        // 初始化
-        getCommandContent();
-        getHistoryCommandManage();
-        getKeyListenerHandlerManage();
     }
 
     /**
@@ -41,7 +37,7 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
      * @param e 事件对象
      */
     @Override
-    public void keyTyped(KeyEvent e) {
+    public synchronized void keyTyped(KeyEvent e) {
         e.setKeyCode(currentKeyCode);
 
         // 监听打印字符的按键。比如：A B C D
@@ -61,7 +57,7 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
      * @param e 事件对象
      */
     @Override
-    public void keyPressed(KeyEvent e) {
+    public synchronized void keyPressed(KeyEvent e) {
         // 防止删除系统提示
         String commandStr = this.getCommandContent().getCommandStr();
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && StrUtil.isBlank(commandStr)) {
@@ -87,7 +83,7 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
      * @param e 事件对象
      */
     @Override
-    public void keyReleased(KeyEvent e) {
+    public synchronized void keyReleased(KeyEvent e) {
         currentKeyCode = e.getKeyCode();
     }
 
