@@ -1,6 +1,7 @@
 package guhong.play.commandsystem.gui.command;
 
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.util.UnicodeConvertUtil;
 import lombok.Data;
 
 /**
@@ -25,6 +26,11 @@ public class DefaultCommandContent implements CommandContent {
      */
     @Override
     public void append(String str) {
+        String uniCodeValue = UnicodeConvertUtil.str2Unicode(str);
+        // \\u0016 表示一个未定的字符，打印出来就是一个方框
+        if ("\\u0016".equals(uniCodeValue)) {
+            return;
+        }
         commandStrContent.append(str);
     }
 
