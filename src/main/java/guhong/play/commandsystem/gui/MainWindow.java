@@ -85,7 +85,8 @@ public class MainWindow extends JFrame {
         // 打印说明信息
         PrintUtil.println("\n帮助：");
         PrintUtil.println("1、可以通过 [list] 命令查看当前系统的所有命令。");
-        PrintUtil.println("2、可以通过 [help 命令] 命令查看指定命令的帮助信息。如：[help list]");
+        PrintUtil.println("2、可以通过 [help 命令] 命令查看指定命令的帮助信息。如：[help list]。");
+        PrintUtil.println("3、目前，无法支持动态的打印，所以在执行build、of -s 时可能会“卡住”，这属于正常现象，不是程序卡死。");
 //        PrintUtil.println("3、你也可以在这里直接执行windows命令\n");
 
         // 打印头部信息

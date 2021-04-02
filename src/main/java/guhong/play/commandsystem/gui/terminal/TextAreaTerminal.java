@@ -40,6 +40,12 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
     public synchronized void keyTyped(KeyEvent e) {
         e.setKeyCode(currentKeyCode);
 
+        String commandStr = this.getCommandContent().getCommandStr();
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && StrUtil.isBlank(commandStr)) {
+            e.consume();
+            return;
+        }
+
         // 监听打印字符的按键。比如：A B C D
         List<KeyListenerHandler> keyListenerHandlerList = this.getKeyListenerHandlerManage().get(KeyType.PRINT);
         for (KeyListenerHandler keyListenerHandler : keyListenerHandlerList) {
@@ -58,13 +64,14 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
      */
     @Override
     public synchronized void keyPressed(KeyEvent e) {
+        currentKeyCode = e.getKeyCode();
+
         // 防止删除系统提示
         String commandStr = this.getCommandContent().getCommandStr();
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && StrUtil.isBlank(commandStr)) {
             e.consume();
             return;
         }
-        currentKeyCode = e.getKeyCode();
 
         // 监听不打印字符的按键。比如: 方向键 ↑ ↓ ← →
         List<KeyListenerHandler> keyListenerHandlerList = this.getKeyListenerHandlerManage().get(KeyType.NOT_PRINT);

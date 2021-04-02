@@ -50,7 +50,7 @@ public class EnterHandler implements KeyListenerHandler {
     @Override
     public void execute(Terminal terminal) {
         CommandContent commandContent = terminal.getCommandContent();
-        String commandStr = commandContent.getCommandStr();
+        String commandStr = commandContent.getCommandStr().trim();
         if (StrUtil.isNotBlank(commandStr)) {
             try {
                 // 执行命令

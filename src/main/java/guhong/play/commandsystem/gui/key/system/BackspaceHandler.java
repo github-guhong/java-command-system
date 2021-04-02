@@ -3,6 +3,7 @@ package guhong.play.commandsystem.gui.key.system;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.gui.command.CommandContent;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
+import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import lombok.Data;
 
@@ -29,6 +30,13 @@ public class BackspaceHandler implements KeyListenerHandler {
     }
 
 
+    /**
+     * 监听类型
+     */
+    @Override
+    public KeyType type() {
+        return KeyType.PRINT;
+    }
 
     /**
      * 执行
