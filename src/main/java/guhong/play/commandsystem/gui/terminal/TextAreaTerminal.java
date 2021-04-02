@@ -31,9 +31,8 @@ public class TextAreaTerminal extends JTextArea implements KeyListener,
         super();
         // 初始化
         getCommandContent();
-        getHistoryCommand();
+        getHistoryCommandManage();
         getKeyListenerHandlerManage();
-        getHistoryIndex();
     }
 
     /**

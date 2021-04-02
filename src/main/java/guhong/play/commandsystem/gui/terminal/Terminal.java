@@ -3,8 +3,7 @@ package guhong.play.commandsystem.gui.terminal;
 import cn.hutool.core.lang.Singleton;
 import guhong.play.commandsystem.gui.command.CommandContent;
 import guhong.play.commandsystem.gui.command.DefaultCommandContent;
-import guhong.play.commandsystem.gui.history.CommandHistoryList;
-import guhong.play.commandsystem.gui.history.HistoryIndex;
+import guhong.play.commandsystem.gui.history.CommandHistoryManage;
 import guhong.play.commandsystem.gui.key.KeyListenerHandlerManage;
 
 /**
@@ -36,6 +35,17 @@ public interface Terminal {
     public void clear();
 
     /**
+     * 获得终端上的文本
+     */
+    public String getText();
+
+    /**
+     * 在终端上设置文本
+     * @param text 文本
+     */
+    public void setText(String text);
+
+    /**
      * 获得键盘监听处理器管理器
      *
      * @return 返回键盘监听处理器列表
@@ -55,20 +65,13 @@ public interface Terminal {
     }
 
     /**
-     * 获得历史列表
+     * 获得历史命令管理器
      * @return 返回历史列表
      */
-    public default CommandHistoryList getHistoryCommand() {
-        return Singleton.get(CommandHistoryList.class);
+    public default CommandHistoryManage getHistoryCommandManage() {
+        return Singleton.get(CommandHistoryManage.class);
     }
 
-    /**
-     * 命令历史的索引位置
-     * @return 返回索引
-     */
-    public default HistoryIndex getHistoryIndex() {
-        return Singleton.get(HistoryIndex.class);
-    }
 
 
 }

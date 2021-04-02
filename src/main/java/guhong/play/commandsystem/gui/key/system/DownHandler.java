@@ -1,7 +1,9 @@
 package guhong.play.commandsystem.gui.key.system;
 
+import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.gui.command.CommandContent;
+import guhong.play.commandsystem.gui.history.CommandHistoryManage;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
-import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import lombok.Data;
 
@@ -34,12 +36,18 @@ public class DownHandler implements KeyListenerHandler {
      */
     @Override
     public void execute(Terminal terminal) {
-        Integer index = terminal.getHistoryIndex().decrease();
-        if (index <= 0) {
-            return;
+        CommandHistoryManage historyCommandManage = terminal.getHistoryCommandManage();
+        String historyCommand = historyCommandManage.next();
+        CommandContent commandContent = terminal.getCommandContent();
+        String commandStr = commandContent.getCommandStr();
+        if (StrUtil.isNotBlank(commandStr)) {
+            // 清除终端上当前的命令
+            String text = terminal.getText();
+            terminal.setText(text.substring(0, text.length() - commandStr.length()));
+            commandContent.clear();
         }
-        String command = terminal.getHistoryCommand().get(index - 1);
-        terminal.print(command);
-        terminal.getCommandContent().append(command);
+        // 打印历史命令
+        terminal.print(historyCommand);
+        terminal.getCommandContent().append(historyCommand);
     }
 }
