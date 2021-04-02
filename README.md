@@ -48,15 +48,8 @@
 
 ```
 config  				// 配置文件目录
-	file
-		config.json 	// of命令相关配置
-	command-data.json 	// 命令数据文件
-	config.json			// 系统配置文件
 document 				// 命令文档目录，存放命令的介绍
 start 					// 启动文件目录
-	config 				// 运行时的配置目录，和上面同理
-	document			// 命令文档，同上
-	lib 				// 打包好的项目地址
 	start.bat			// 这是打包好后的可执行文件，你可以给它创建一个快捷方式在桌面，方便使用
 src 					// 源码目录
 ```
@@ -78,7 +71,7 @@ util		// 存放工具类
 
 
 
-## 五、命令运行流程
+## 五、系统运行流程
 
 ```
 初始化：
@@ -92,7 +85,11 @@ util		// 存放工具类
 
 
 
-## 六、核心类介绍
+## 六、核心类介绍	
+
+​	如果你想现在就知道怎么自定义命令，可以直接跳过核心类的介绍。当然我还是建议你看一看。
+
+​	[自定义命令](#七、自定义命令)
 
 ### 一）、CommandJob
 
@@ -353,6 +350,7 @@ value:
 
 /**
  * 终端接口
+ *
  * @author : 李双凯
  * @date : 2019-11-20 22:32
  **/
@@ -361,12 +359,14 @@ public interface Terminal {
 
     /**
      * 终端上打印
+     *
      * @param message 打印的信息
      */
     public void print(String message);
 
     /**
      * 终端上换行打印
+     *
      * @param message 打印的消息
      */
     public void println(String message);
@@ -377,21 +377,45 @@ public interface Terminal {
     public void clear();
 
     /**
-     * 获得键盘监听处理器列表
+     * 获得终端上的文本
+     */
+    public String getText();
+
+    /**
+     * 在终端上设置文本
+     * @param text 文本
+     */
+    public void setText(String text);
+
+    /**
+     * 获得键盘监听处理器管理器
+     *
      * @return 返回键盘监听处理器列表
      */
-    public default KeyListenerHandlerList getKeyListenerHandlerList() {
-        return Singleton.get(KeyListenerHandlerList.class);
+    public default KeyListenerHandlerManage getKeyListenerHandlerManage() {
+        return Singleton.get(KeyListenerHandlerManage.class);
     }
 
 
     /**
      * 获得命令上下文
+     *
      * @return 返回命令上下文
      */
     public default CommandContent getCommandContent() {
         return Singleton.get(DefaultCommandContent.class);
     }
+
+    /**
+     * 获得历史命令管理器
+     * @return 返回历史列表
+     */
+    public default CommandHistoryManage getHistoryCommandManage() {
+        return Singleton.get(CommandHistoryManage.class);
+    }
+
+
+
 }
 
 ```
@@ -426,13 +450,13 @@ public interface KeyListenerHandler {
      */
     public boolean isListener(KeyEvent e);
 
-    /**
-     * 是否结束监听
-     * @param e 事件对象
-     * @param terminal 终端对象
-     * @return 不监听返回true
+   /**
+     * 监听类型
+     * 详情请见枚举： KeyType
      */
-    public boolean isExit(KeyEvent e, Terminal terminal);
+    public default KeyType type() {
+        return KeyType.NOT_PRINT;
+    }
 
     /**
      * 执行
@@ -491,6 +515,12 @@ public interface CommandContent {
 
 
 
+#### 4、CommandHistoryManage
+
+​	命令历史管理器，用于记录命令。有了这个之后，可以通过方向键来切换历史命令了。
+
+​	**注：该模块在`2.1.2`才引入。**
+
 ​	
 
 ​	
@@ -511,7 +541,9 @@ public interface CommandContent {
 
 **2、继承CommandJob**
 
-​	正如上面所述的，继承`CommandJob`接口，然后定义好自己的命令和执行的内容。记得测试哦
+​	打开项目，找个地方创建一个新class，然后让其继承`CommandJob`接口，然后定义好自己的命令和执行的内
+
+容。记得测试哦
 
 **3、reload**
 
@@ -638,25 +670,6 @@ guhong#2021-01-05 22-21 java-command-system/ : build
 ## 八、下个版本需求
 
 
-- v2.1.1
-- bug
-
-    - build命令-p参数下无法正确拼接路径的问题 √
-    - of命令参数空格导致匹配不正确问题 √
-    - of无法正确打开特殊字符的文件 √
-    - of命令添加多个快捷目录时会导致所有的索引失效问题 √
-    - 解决粘贴的内容无法被捕获的问题 √
-
-- 优化
-    - of支持严格匹配 √
-    - of支持路径匹配 
-
-- 新增
-    - 支持上下键查询命令历史 √
-    - ctrl + shift + l 清空控制台 √
-    - 支持组合快捷键 √
-
-
 
 
 - v2.1.2
@@ -668,15 +681,13 @@ guhong#2021-01-05 22-21 java-command-system/ : build
         - 
     - of 命令扩展
         - 忽略文件支持删除
-
         - 快捷目录支持删除
-
         - 更方便的忽略文件
 
             - 支持通过忽略文件进行忽略
             - 增加一些默认的忽略标识。如：`.jpg  .png .git`...
-
         - 增加默认快捷路径，默认将start目录设置为快捷路径
+        - of支持路径匹配
 
     - 支持扩展终端
     - 支持别名
