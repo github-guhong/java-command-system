@@ -46,10 +46,6 @@ public class FileIndexManage {
      */
     private String configPath = Constant.CONFIG_PATH + "/file/config.json";
 
-    /**
-     * 默认忽略路径
-     */
-    private String defaultIgnore = ".git,.jpg,.png,.jpeg,.vscode,node_modules";
 
     public FileIndexManage() {
         JSONObject jsonObject = FileOperationUtil.readConfigAndParse(configPath);
@@ -64,21 +60,13 @@ public class FileIndexManage {
     /**
      * 重新加载
      */
-    public void reload(String reloadPath) {
+    public void reload() {
         // 重置索引
         fileIndex = CollectionUtil.newArrayList();
 
-        Collection<String> reloadPathList = directoryList;
-        if (StrUtil.isNotBlank(reloadPath)) {
-            reloadPathList = stringToArray(reloadPath);
-            checkFilePathExist(reloadPathList);
-        }
-        if (CollectionUtil.isEmpty(reloadPathList)) {
-            return;
-        }
-        for (String path : reloadPathList) {
+        for (String path : directoryList) {
 
-            // 遍历指定目
+            // 遍历目录
             List<File> files = getAllFile(path);
             // 加入根目录
             files.add(new File(path));
@@ -95,7 +83,7 @@ public class FileIndexManage {
                     this.fileIndex.add(fileIndex);
                 }
             } else {
-                throw new SystemException("没有找到任何文件，这是不合理的！");
+                throw new SystemException("没有找到任何文件。");
             }
         }
 
@@ -117,9 +105,8 @@ public class FileIndexManage {
         } else {
             PrintUtil.println("该地址以被忽略，不需要重新添加。");
             PrintUtil.println("当前添加的忽略数据有："+this.ignoreList);
-
         }
-
+        sync();
     }
 
     /**
@@ -156,7 +143,7 @@ public class FileIndexManage {
             if (newSize > oldSize) {
                 // 说明有新路径
                 PrintUtil.println("成功添加" + (newSize - oldSize) + "个快捷目录,正在自动创建索引。。。");
-                this.reload(directoryValue + "," + arrayToString(directoryList));
+                this.reload();
                 PrintUtil.println("创建成功！");
                 return;
             }
@@ -181,11 +168,11 @@ public class FileIndexManage {
             if (CollectionUtil.isEmpty(this.directoryList)) {
                 throw new SystemException("没有设置任何快捷目录。你可以通过[of -s 目录名 -i 忽略的文件]来添加快捷目录。详情请使用[help of]查看命令帮助文档");
             }
-            this.reload(null);
+            this.reload();
             if (CollectionUtil.isNotEmpty(fileIndex)) {
                 PrintUtil.println("创建完成！");
             } else {
-                throw new SystemException("没有找到任何文件，这是不合理的！");
+                throw new SystemException("没有找到任何文件");
             }
         }
         for (FileIndex index : this.fileIndex) {

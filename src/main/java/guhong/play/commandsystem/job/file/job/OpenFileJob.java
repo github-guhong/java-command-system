@@ -39,7 +39,7 @@ public class OpenFileJob implements CommandJob {
     public CommandConfig getCommandConfig() {
         FileCommandConfig commandConfig = new FileCommandConfig("of", "帮你快速打开文件");
         Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
-        paramConfig.put("reload", true);
+        paramConfig.put("reload", false);
         paramConfig.put("-i", true);
         paramConfig.put("-s", true);
 
@@ -76,7 +76,7 @@ public class OpenFileJob implements CommandJob {
         }
         String reloadValue = command.getParamValue("reload");
         if (null != reloadValue) {
-            fileIndexManage.reload(reloadValue);
+            fileIndexManage.reload();
         }
 
         String fileTypeValue = null == command.getParamValue("-f") ? null : "-f";

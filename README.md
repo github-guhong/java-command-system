@@ -689,7 +689,7 @@ guhong#2021-01-05 22-21 java-command-system/ : build
 
             - 支持通过忽略文件进行忽略
             - 增加一些默认的忽略标识。如：`.jpg  .png .git`...
-        - 增加默认快捷路径，默认将start目录设置为快捷路径
+        - 增加默认快捷路径，默认将`start/config`和`document`目录设置为快捷路径
         - of支持路径匹配
         - 
 
