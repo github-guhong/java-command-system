@@ -65,7 +65,8 @@ public class FileIndexManage {
      * 重新加载
      */
     public void reload(String reloadPath) {
-//        fileIndex = CollectionUtil.newArrayList();
+        // 重置索引
+        fileIndex = CollectionUtil.newArrayList();
 
         Collection<String> reloadPathList = directoryList;
         if (StrUtil.isNotBlank(reloadPath)) {
@@ -127,7 +128,7 @@ public class FileIndexManage {
      * @param directoryValue 目录地址
      */
     public void addDirectory(String directoryValue) {
-        List<String> list = stringToArray(directoryValue);
+        Collection<String> list = stringToArray(directoryValue);
         // 检查路径是否存在
         checkFilePathExist(list);
 
@@ -155,7 +156,7 @@ public class FileIndexManage {
             if (newSize > oldSize) {
                 // 说明有新路径
                 PrintUtil.println("成功添加" + (newSize - oldSize) + "个快捷目录,正在自动创建索引。。。");
-                this.reload(directoryValue);
+                this.reload(directoryValue + "," + arrayToString(directoryList));
                 PrintUtil.println("创建成功！");
                 return;
             }
@@ -258,13 +259,13 @@ public class FileIndexManage {
     }
 
 
-    private List<String> stringToArray(String value) {
+    private Collection<String> stringToArray(String value) {
         String[] split = value.split(",");
         return Arrays.asList(split);
     }
 
-    private String arrayToString(List<String> array) {
-        return ArrayUtil.join(array, ",");
+    private String arrayToString(Collection<String> array) {
+        return CollectionUtil.join(array, ",");
     }
 
 

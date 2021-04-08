@@ -75,9 +75,10 @@ util		// 存放工具类
 
 ```
 初始化：
-	读取配置——》加载命令传输对象（CommandDto）——》读取命令
+	读取配置——》加载命令传输对象（CommandDto）——》读取命令到内存
 执行命令时：
-	输入命令——》验证是否有效——》命令解析器（CommandParseHandler）——》
+	输入命令到终端（Terminal）——》键盘监听（KeyListenerHandler）——》
+	存入命令上下文（CommandContent）——》回车——》命令解析器（CommandParseHandler）——》
 	命令执行器（CommandExecutor）——》执行工作（CommandJob.run）
 ```
 
@@ -93,7 +94,7 @@ util		// 存放工具类
 
 ### 一）、CommandJob
 
-​	`CommandJob`是个接口。该接口包含4个方法
+​	`CommandJob`是个接口。
 
 ```java
  	/**
@@ -132,9 +133,9 @@ util		// 存放工具类
 
 分别对应**命令解释器**和**命令执行器**。
 
-​	`getCommandConfig`方法需要返回一个命令的配置对象，详情请见**CommandConfig**对象
+​	`getCommandConfig`方法需要返回一个命令的配置对象，详情请见[**CommandConfig**](#二）、CommandConfig)对象
 
-​	`run`方法就是要执行命令后要运行的代码，该方法会传入一个解析好的**Command**对象
+​	`run`方法就是要执行命令后要运行的代码，该方法会传入一个解析好的[**Command**](#三）、Command)对象
 
 
 
@@ -326,7 +327,7 @@ value:
 
 ​	顾名思义，命令管理器，命令的执行从这里开始。
 
-​	它包含系统配置对象、命令传输对象（[CommandDto](#六）、CommandDto)）以及终端对象（[Terminal]()）
+​	它包含系统配置对象、命令传输对象（[CommandDto](#六）、CommandDto)）以及终端对象（[Terminal]()）等
 
 
 
@@ -336,13 +337,13 @@ value:
 
 ​	2.0版本使用了窗体的界面，这样会有更好的交互，同样也会有很多的问题，所以`2.0`是个不稳定的版本，要
 
-使用的话请选择`2.1.0`
+使用的话请选择`2.1.1`
 
 ​		
 
 #### 1、Terminal
 
-​	一个抽象话的终端接口，个人实力优先，对gui并不了解，所以希望可以把终端这个概念抽离出来。
+​	一个抽象话的终端接口，个人实力有限，对gui并不了解。
 
 ​	默认情况下使用`TextAreaTerminal`文本域作为终端页面。
 
@@ -541,17 +542,19 @@ public interface CommandContent {
 
 **2、继承CommandJob**
 
-​	打开项目，找个地方创建一个新class，然后让其继承`CommandJob`接口，然后定义好自己的命令和执行的内
-
-容。记得测试哦
+​	打开项目，找个地方创建一个新class，然后让其继承`CommandJob`接口。
 
 **3、reload**
 
-​	运行项目,输入`reload`命令重新加载命令，此时你就可以在开发工具中使用你自定义的命令了
+​	测试好自己写的CommandJob的后，运行项目。然后输入`reload`命令重新加载命令，此时你就可以使用
+
+`list`命令查看到你自定义的命令了
 
 **4、打包项目**
 
-​	最后输入`build`命令，系统将自动帮你打包当前项目。
+​	确定命令没问题后，在终端上输入`build`命令，系统将自动帮你打包当前项目。打包后就可以使用
+
+`./start/start.bat`启动你的命令系统了。
 
 
 
@@ -688,6 +691,7 @@ guhong#2021-01-05 22-21 java-command-system/ : build
             - 增加一些默认的忽略标识。如：`.jpg  .png .git`...
         - 增加默认快捷路径，默认将start目录设置为快捷路径
         - of支持路径匹配
+        - 
 
     - 支持扩展终端
     - 支持别名
@@ -700,7 +704,7 @@ guhong#2021-01-05 22-21 java-command-system/ : build
         - 构建项目后，可以选择是否创建快捷方式到桌面
 - bug
 
-    - 
+    - 修复of reload命令重复添加索引问题 √
 
 
 
