@@ -675,7 +675,7 @@ guhong#2021-01-05 22-21 java-command-system/ : build
 
 
 
-- v2.1.2
+- v2.2.0
 - 新增
 
     - system组增加命令
@@ -704,7 +704,7 @@ guhong#2021-01-05 22-21 java-command-system/ : build
         - 构建项目后，可以选择是否创建快捷方式到桌面
 - bug
 
-    - 修复of reload命令重复添加索引问题 √
+    - 
 
 
 

@@ -227,7 +227,7 @@ public class CmdUtil {
 
         // 存在空格，使用双引号括起来
         if (value.contains(" ")) {
-            return addQuote(value);
+            return "\"\" " + addQuote(value);
         }
         for (String s : Constant.SPECIAL_CHAR) {
             if (value.contains(s)) {
