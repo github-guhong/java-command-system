@@ -2,9 +2,11 @@ package guhong.play.commandsystem;
 
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
+import guhong.play.commandsystem.constant.CommandMode;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.exception.SystemException;
 import guhong.play.commandsystem.gui.terminal.Terminal;
+import guhong.play.commandsystem.job.file.job.OpenFileJob;
 import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.job.CommandJob;
@@ -56,16 +58,21 @@ public class CommandManager {
         } else {
             CommandJob commandJob = commandDto.getCommandJob(commandKey);
             if (null == commandJob) {
-                // 如果没有找到则直接执行windows命令，如果windows命令也执行失败，那就抛出异常
-                Process process = CmdUtil.exec(commandStr);
-                if (null == process) {
-                    throw new NotCommandException(commandKey);
-                } else {
-                    CmdUtil.printProcess(process);
+                if (CommandMode.OF.equals(systemConfig.getMode())) {
+                    commandStr = "of " + commandStr;
+                    commandJob = new OpenFileJob();
+                } else if (CommandMode.CMD.equals(systemConfig.getMode())) {
+                    Process process = CmdUtil.exec(commandStr);
+                    if (null == process) {
+                        throw new NotCommandException(commandKey);
+                    } else {
+                        CmdUtil.printProcess(process);
+                    }
+                    return;
                 }
-            } else {
-                commandJob.doStart(commandStr);
+
             }
+            commandJob.doStart(commandStr);
         }
     }
 

@@ -181,39 +181,6 @@ public class CmdUtil {
         return path;
     }
 
-    /**
-     * 执行临时脚本
-     *
-     * @param batCommandModel 命令模板
-     */
-    public static Boolean executeTempBat(String batCommandModel) {
-        batCommandModel += "\n exit";
-
-        FileOperationUtil.createDir(Constant.TEMP_PATH);
-        String tempBatPath = Constant.TEMP_PATH + "/tempBat" + IdUtil.simpleUUID() + ".bat";
-        File file = new File(tempBatPath);
-        if (!FileUtil.exist(file)) {
-            try {
-                if (!file.createNewFile()) {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                PrintUtil.errorPrint("创建临时脚本失败：" + e.getMessage());
-            }
-        }
-        // 将脚本写入临时文件
-        IoUtil.write(FileUtil.getOutputStream(file), true, batCommandModel.getBytes());
-        // 执行命令
-        Process process = exec(file.getPath());
-        CmdUtil.printProcess(process);
-
-        Boolean result = isSuccess(process);
-        if (result) {
-            FileUtil.del(file);
-        }
-        return result;
-    }
-
 
     /**
      * 将字符串格式化成cmd支持的字符

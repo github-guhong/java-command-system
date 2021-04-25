@@ -42,7 +42,7 @@ public class FileIndexManage {
     private Set<String> directoryList = CollectionUtil.newHashSet();
 
     /**
-     * 配置定制
+     * 配置地址
      */
     private String configPath = Constant.CONFIG_PATH + "/file/config.json";
 

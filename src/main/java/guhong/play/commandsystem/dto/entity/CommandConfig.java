@@ -41,7 +41,7 @@ public class CommandConfig {
     /**
      * 命令的参数的配置
      * key：参数名
-     * value：参数是否需要一个值，改值不会为null，除非没有输入该参数
+     * value：参数是否需要一个值，该值不会为null，除非没有输入该参数，也就是说，你可以通过 （null == 参数名）的方式来判断是否输入了指定的参数
      */
     private Map<String, Boolean> paramConfig = CollectionUtil.newHashMap();
 
@@ -83,6 +83,10 @@ public class CommandConfig {
 
     public void setFileIntroduce(String fileName) {
         this.setIntroduce("file:" + Constant.DOCUMENT_PATH + "/" + this.getGroup() + "/" + fileName);
+    }
+
+    public void putParamConfig(String param, Boolean require) {
+        this.getParamConfig().put(param,require);
     }
 
 }
