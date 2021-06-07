@@ -54,6 +54,7 @@ public class ModeSwitchJob implements CommandJob {
             CommandMode commandMode = CommandMode.getByName(value);
             if (null == commandMode) {
                 PrintUtil.errorPrint(value + "模式不存在！你可以通过[mode -l]命令查看支持的模式。");
+                return;
             }
             SystemConfig systemConfig = CommandManager.getSystemConfig();
             systemConfig.setMode(commandMode);

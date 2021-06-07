@@ -1,5 +1,6 @@
 package guhong.play.commandsystem.gui.key.system;
 
+import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import guhong.play.commandsystem.util.ToolUtil;
@@ -37,6 +38,8 @@ public class CtrlLHandler implements KeyListenerHandler {
     @Override
     public void execute(Terminal terminal) {
         terminal.clear();
+        String commandStr = terminal.getCommandContent().getCommandStr();
         terminal.print(ToolUtil.getHeadInfo());
+        terminal.print(commandStr.trim());
     }
 }

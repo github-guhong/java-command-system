@@ -3,8 +3,10 @@ package guhong.play.commandsystem.job.system.job;
 import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
+import guhong.play.commandsystem.gui.terminal.Terminal;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
+import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
 
 /**
@@ -34,6 +36,7 @@ public class ClearTextJob implements CommandJob {
      */
     @Override
     public void run(Command command) {
-        CommandManager.getTerminal().clear();
+        Terminal terminal = CommandManager.getTerminal();
+        terminal.clear();
     }
 }
