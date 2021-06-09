@@ -35,7 +35,8 @@ public class CommandHistoryManage{
      */
     public synchronized void add(String s) {
         // 限制数量，但我不想写
-        this.historyList.add(s);
+        // 增加命令历史时，总是追加一个空格。这样方便使用历史命令时刻意快速配合命令参数的使用
+        this.historyList.add(s.trim() + " ");
         index = historyList.size() - 1;
     }
 
