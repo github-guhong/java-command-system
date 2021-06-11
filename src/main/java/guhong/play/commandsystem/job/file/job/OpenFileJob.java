@@ -1,6 +1,7 @@
 package guhong.play.commandsystem.job.file.job;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class OpenFileJob implements CommandJob {
 
 
-    private FileIndexManage fileIndexManage = new FileIndexManage();
+    private FileIndexManage fileIndexManage = Singleton.get(FileIndexManage.class);
 
 
     /**
@@ -120,34 +121,26 @@ public class OpenFileJob implements CommandJob {
         if (null != openIndexStr && ToolUtil.isInteger(openIndexStr)) {
             try {
                 openIndex = Integer.parseInt(openIndexStr) - 1;
-            } catch (Exception e) {
-                openIndex = null;
-            }
+            } catch (Exception e) {}
         }
-        // 如果找到不止一个文件，则打印出来进行选择
         int fileCount = fileIndexList.size();
+        if (fileCount == 1) {
+            openIndex = 0;
+        }
         PrintUtil.println("\n成功找到" + fileCount + "个文件");
         for (int i = 0; i < fileIndexList.size(); i++) {
             FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
-            PrintUtil.println((i + 1) + "、" + fileIndex.getFilePath());
+            String flag = "";
+            if (null != openIndex) {
+                flag = openIndex == i ? "  <-------- " : "";
+            }
+            PrintUtil.println((i + 1) + "、" + fileIndex.getFilePath() + flag);
         }
-        // 窗口模式下会堵塞
-//            PrintUtil.print("序号 / 重新输入文件名：");
-//            String choice = InputUtil.inputNotEmpty();
-//            if (ToolUtil.isInteger(choice)) {
-//                openIndex = Integer.parseInt(choice);
-//            } else {
-//                this.run(new Command().setValueList(CollectionUtil.newArrayList(choice)));
-//                return;
-//            }
-        if (fileCount == 1) {
-            FileIndexManage.FileIndex fileIndex = fileIndexList.get(0);
-            PrintUtil.println("\n只查到一个索引，正在打开: " + fileIndex.getFilePath());
-            CmdUtil.openFile(fileIndex.toFile());
-        } else if (null != openIndex){
+        if (null != openIndex) {
             FileIndexManage.FileIndex fileIndex = fileIndexList.get(openIndex);
-            PrintUtil.println("\n正在打开你指定的索引路径: " + fileIndex.getFilePath());
+            PrintUtil.println("\n正在打开: " + fileIndex.getFilePath());
             CmdUtil.openFile(fileIndex.toFile());
         }
+
     }
 }

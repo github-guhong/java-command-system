@@ -50,9 +50,12 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
         // 跳过第一个，第一个是命令的名字
         for (index = index + 1; index <= maxIndex; index++) {
             String paramName = commandSection[index];
+
+            // 判断是参数还是值
             Boolean existValue = paramConfig.get(paramName);
+            // 参数
             if (null != existValue) {
-                // 该参数是否存在值
+                // 判断该参数是否需要一个值
                 String paramValue = "";
                 if (existValue && (index + 1) <= maxIndex) {
                     ++index;
@@ -66,18 +69,11 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
                 params.put(paramName, paramValue);
 
             } else {
+                // 值
                 commandValue.add(paramName);
             }
 
         }
-
-//        // 解析命令值
-//        if (commandConfig.getIsExistValue()) {
-//            if (index > maxIndex) {
-//                throw new ParseException("["+commandKey+"] 命令必须包含一个值！");
-//            }
-//            commandValue = commandSection[commandSection.length - 1];
-//        }
 
         Command command = new Command();
         command.setKey(commandKey);

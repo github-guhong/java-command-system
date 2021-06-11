@@ -3,6 +3,7 @@ package guhong.play.commandsystem.dto;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -58,7 +59,7 @@ public class DefaultCommandDto implements CommandDto {
 
             Set<Class<? extends CommandJob>> subClassList = reflections.getSubTypesOf(CommandJob.class);
             for (Class<? extends CommandJob> subClass : subClassList) {
-                CommandJob commandJob = ReflectUtil.newInstance(subClass);
+                CommandJob commandJob = Singleton.get(subClass);
                 CommandConfig commandConfig = commandJob.getCommandConfig();
                 if (null == commandConfig) {
                     PrintUtil.println("warn:" + commandJob.getClass() + "没有配置命令，该命令将无法使用！");
