@@ -128,7 +128,7 @@ public class OpenFileJob implements CommandJob {
             openIndex = 0;
         }
         PrintUtil.println("\n成功找到" + fileCount + "个文件：\n");
-        if (fileCount > 1) {
+        if (fileCount > 1 && StrUtil.isBlank(openIndexStr)) {
             PrintUtil.println("请重新输入命令并指定要打开的文件编号。如：" + command.getSource() +" "+ fileCount + "\n");
         }
 
