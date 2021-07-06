@@ -79,6 +79,7 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
         command.setKey(commandKey);
         command.setParams(params);
         command.setValueList(commandValue);
+        command.setSource(commandStr);
         return command;
     }
 }

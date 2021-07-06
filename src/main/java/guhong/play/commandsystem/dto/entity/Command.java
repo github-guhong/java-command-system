@@ -35,6 +35,11 @@ public class Command {
      */
     private List<String> valueList;
 
+    /**
+     * 命令源字符串
+     */
+    private String source;
+
 
     @Override
     public String toString() {

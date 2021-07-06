@@ -116,7 +116,7 @@ public class OpenFileJob implements CommandJob {
         }
 
         // 查询到数据打开文件
-        String openIndexStr = command.getLastValue();
+        String openIndexStr = command.getSecondValue();
         Integer openIndex = null;
         if (null != openIndexStr && ToolUtil.isInteger(openIndexStr)) {
             try {
@@ -127,7 +127,11 @@ public class OpenFileJob implements CommandJob {
         if (fileCount == 1) {
             openIndex = 0;
         }
-        PrintUtil.println("\n成功找到" + fileCount + "个文件");
+        PrintUtil.println("\n成功找到" + fileCount + "个文件：\n");
+        if (fileCount > 1) {
+            PrintUtil.println("请重新输入命令并指定要打开的文件编号。如：" + command.getSource() +" "+ fileCount + "\n");
+        }
+
         for (int i = 0; i < fileIndexList.size(); i++) {
             FileIndexManage.FileIndex fileIndex = fileIndexList.get(i);
             String flag = "";
