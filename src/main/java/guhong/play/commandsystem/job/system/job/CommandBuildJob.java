@@ -96,7 +96,7 @@ public class CommandBuildJob implements CommandJob {
      * @return 返回模板
      */
     private String getStartBatModel(String projectName, String version) {
-        return "java -jar ./lib/" + projectName + "-" + version + "-jar-with-dependencies.jar\n" +
+        return "java -jar -Dfile.encoding=UTF-8 ./lib/" + projectName + "-" + version + "-jar-with-dependencies.jar\n" +
                 "\n" +
                 "exit\n";
     }

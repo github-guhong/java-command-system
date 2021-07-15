@@ -3,7 +3,6 @@ package guhong.play.commandsystem.util;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -17,7 +16,6 @@ import lombok.Data;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -138,6 +136,7 @@ public class FileOperationUtil {
                 try {
                     commandJob = ReflectUtil.newInstance(commandJobString);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     PrintUtil.errorPrint("实例化[" + commandKey + "]命令时出现错误，" + e.getMessage() + "。这将导致你无法使用该命令。如果该命令已删除，请使用[reload]命令重新加载命令");
                 }
                 commandJobMap.put(commandKey, commandJob);
