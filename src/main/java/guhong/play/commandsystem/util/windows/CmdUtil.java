@@ -1,21 +1,15 @@
 package guhong.play.commandsystem.util.windows;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.constant.Constant;
-import guhong.play.commandsystem.util.FileOperationUtil;
 import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * windows命令工具
@@ -194,7 +188,11 @@ public class CmdUtil {
 
         // 存在空格，使用双引号括起来
         if (value.contains(" ")) {
-            return "\"\" " + addQuote(value);
+            if (FileUtil.isFile(value)) {
+                return "\"\" " + addQuote(value);
+            } else {
+                return addQuote(value);
+            }
         }
         for (String s : Constant.SPECIAL_CHAR) {
             if (value.contains(s)) {
