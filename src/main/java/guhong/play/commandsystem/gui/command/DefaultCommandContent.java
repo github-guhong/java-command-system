@@ -16,7 +16,7 @@ public class DefaultCommandContent implements CommandContent {
     /**
      * 用来存储当前输入的命
      */
-    private StringBuilder commandStrContent = new StringBuilder();
+    private StringBuffer commandStrContent = new StringBuffer();
 
 
     /**
