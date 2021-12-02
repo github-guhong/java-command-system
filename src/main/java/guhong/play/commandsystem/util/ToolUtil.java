@@ -5,7 +5,6 @@ import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.job.CommandJob;
-import guhong.play.commandsystem.util.print.PrintUtil;
 import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Data;
 
@@ -141,7 +140,6 @@ public class ToolUtil {
      * 关机
      */
     public static void shutdown() {
-        PrintUtil.print("告辞！");
         System.exit(0);
     }
 
