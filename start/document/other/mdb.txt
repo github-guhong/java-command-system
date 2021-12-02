@@ -1,0 +1,48 @@
+命令介绍
+    (mdb) MarkDown Beautiful 命令，可以帮你完成一些MarkDown文件（以下简称md）的美化工作。比如增加头部信息、将
+    本地图片的地址上传到网上实现外网访问等
+
+命令用法
+    执行美化：mdb [-b 备份地址] [-c] [-r 根路径地址] md文件/目录所在的地址 [执行美化服务的编号]
+    查看当前支持的美化服务：mdb -l
+
+
+命令参数解释
+    -b:
+        因为美化会修改原来的md文件，为了保证源文件不被修改所以可以选择加上该参数进行备份。可以自定义一个备份的路径
+        如果没有则会把备份文件放在你指定的md文件所在的地址同目录下
+    -c:
+        该参数表示如果已存在美化的信息是否覆盖。也就是说，如果已经美化过了，是否重新美化一次。
+    -r:
+        该参数表示一个根路径地址。因为头部信息包含分类、标签等信息，所以我们会通过路径来构建这些信息。
+        这个参数主要针对于单个md文件，即你只想美化单个md文件的时候就可以指定这个参数，不然单个md文件的情况下
+        无法构建分类、标签信息。如果美化的是一个目录则可以不用管这个参数
+    -l:
+        查看当前支持那些美化服务
+
+命令值解释
+    [md文件/目录所在的地址]：
+        只是指定你要进行美化的md文件或目录
+    [执行美化服务的编号]:
+        指定要执行的美化服务，可通过[mdb -l]查看支持的美化服务。默认执行全部美化服务
+        多个用英文逗号隔开。如：1,2,3
+
+注意
+    对于图片的美化，我采用了ali的oss。所以在使用文件美化的时候需要去购买ali的oss服务，然后在sys-config.json中编辑好自己的配置即可
+      "thirdParty" : {
+        "aliyun": {
+          "accessKeyId": "你阿里云账号的accessKeyId。控制台-头像-accessKey管理",
+          "accessKeySecret": "你阿里云账号的accessKeySecret。同上",
+          "oss": {
+            "endpoint": "oss-cn-shenzhen.aliyuncs.com",
+            "bucketName": "桶名称：https://help.aliyun.com/document_detail/177682.html",
+            "prefix": "存放文件的前缀"
+          }
+        }
+      }
+    当然你可以实现自己的上传服务，上传到其他服务器
+    只要实现
+        guhong.play.commandsystem.job.other.md.service.impl.link.upload.UploadService
+    这个类接口并且替换掉
+        guhong.play.commandsystem.job.other.md.service.impl.link.ImageBeautifyService中的
+        private UploadService uploadService = Singleton.get(你自己实现的类.class); 即可

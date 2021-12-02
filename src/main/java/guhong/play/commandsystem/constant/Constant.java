@@ -1,6 +1,5 @@
 package guhong.play.commandsystem.constant;
 
-import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
 
 /**
@@ -26,6 +25,18 @@ public class Constant {
      * 文档地址
      */
     public static final String DOCUMENT_PATH = PROJECT_PATH + "/document";
+
+
+    /**
+     * 数据文件地址
+     */
+    public static final String DATA_PATH = PROJECT_PATH + "/data";
+
+
+    /**
+     * 缓存文件地址
+     */
+    public static final String CACHE_PATH = DATA_PATH + "/cache";
 
     /**
      * 配置文件目录

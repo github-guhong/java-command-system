@@ -1,13 +1,13 @@
 package guhong.play.commandsystem.parse;
 
-import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.exception.ParseException;
+import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,43 +43,84 @@ public class DefaultCommandParseHandler implements CommandParseHandler {
 
         // 获得命令名
         String commandKey = commandSection[index];
-        Map<String, String> params = CollectionUtil.newHashMap();
-        List<String> commandValue = CollectionUtil.newArrayList();
+        Command command = new Command();
+        command.setKey(commandKey);
+        command.setSource(commandStr);
 
         Map<String, Boolean> paramConfig = commandConfig.getParamConfig();
         // 跳过第一个，第一个是命令的名字
         for (index = index + 1; index <= maxIndex; index++) {
-            String paramName = commandSection[index];
+            String paramNameOrValue = commandSection[index];
 
             // 判断是参数还是值
-            Boolean existValue = paramConfig.get(paramName);
-            // 参数
+            Boolean existValue = paramConfig.get(paramNameOrValue);
             if (null != existValue) {
-                // 判断该参数是否需要一个值
+                // 参数
                 String paramValue = "";
                 if (existValue && (index + 1) <= maxIndex) {
                     ++index;
                     paramValue = commandSection[index];
+                    JSONObject result = doSpace(paramValue, commandSection, index);
+                    paramValue = result.getString("str");
+                    index = result.getInteger("index");
 
-                    // 如果这个值是一个参数，则抛出异常
                     if (null != paramConfig.get(paramValue)) {
-                        throw new ParseException("[" + paramName + "] 参数必须包含一个值！");
+                        throw new ParseException("[" + paramNameOrValue + "] 参数必须包含一个值！");
                     }
                 }
-                params.put(paramName, paramValue);
+                command.putParamValue(paramNameOrValue, paramValue);
 
             } else {
                 // 值
-                commandValue.add(paramName);
+                JSONObject result = doSpace(paramNameOrValue, commandSection, index);
+                paramNameOrValue = result.getString("str");
+                index = result.getInteger("index");
+                command.addValue(paramNameOrValue);
             }
 
         }
 
-        Command command = new Command();
-        command.setKey(commandKey);
-        command.setParams(params);
-        command.setValueList(commandValue);
-        command.setSource(commandStr);
+
         return command;
+    }
+
+    public boolean isStringHead(String str) {
+        String head = str.substring(0, 1);
+        return "\"".equals(head) || "'".equals(head);
+    }
+
+    public boolean isStringTail(String str) {
+        String tail = str.substring(str.length() - 1);
+        return "\"".equals(tail) || "'".equals(tail);
+    }
+
+    public JSONObject doSpace(String str, String[] commandSection, int currentIndex) {
+        JSONObject result = new JSONObject();
+        result.put("str", str);
+        result.put("index", currentIndex);
+
+        if (ToolUtil.isBlankParam(str)) {
+            result.put("str", "");
+            return result;
+        }
+
+        // 处理带空格的值问题
+        if (isStringHead(str)) {
+            String next = null;
+            StringBuilder strBuilder = new StringBuilder(str);
+            do {
+                currentIndex++;
+                if (currentIndex >= commandSection.length) {
+                    throw new ParseException("命令格式不正确，请完善\"或'符号");
+                }
+                next = commandSection[currentIndex];
+                strBuilder.append(" ").append(next);
+            } while (!isStringTail(next));
+            str = strBuilder.toString();
+            str = str.substring(1, str.length() - 1);
+            result.put("str", str);
+            result.put("index", currentIndex);
+        }
+        return result;
     }
 }

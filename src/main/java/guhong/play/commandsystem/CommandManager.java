@@ -6,8 +6,8 @@ import guhong.play.commandsystem.constant.CommandMode;
 import guhong.play.commandsystem.constant.Constant;
 import guhong.play.commandsystem.exception.SystemException;
 import guhong.play.commandsystem.gui.terminal.Terminal;
-import guhong.play.commandsystem.job.file.job.OpenFileJob;
-import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.job.file.OpenFileJob;
+import guhong.play.commandsystem.util.file.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.SystemConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.dto.CommandDto;
@@ -72,7 +72,12 @@ public class CommandManager {
                 }
 
             }
-            commandJob.doStart(commandStr);
+            try {
+                commandJob.doStart(commandStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+                PrintUtil.errorPrint("命令执行失败：" + e.getMessage());
+            }
         }
     }
 

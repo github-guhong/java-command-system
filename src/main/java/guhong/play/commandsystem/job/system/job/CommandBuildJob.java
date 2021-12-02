@@ -8,7 +8,7 @@ import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.job.system.SystemCommandConfig;
-import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.file.FileOperationUtil;
 import guhong.play.commandsystem.util.ToolUtil;
 import guhong.play.commandsystem.util.XmlOperationUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
@@ -77,6 +77,12 @@ public class CommandBuildJob implements CommandJob {
             String configPath = buildProjectPath + "/config";
             if (FileUtil.exist(configPath)) {
                 FileUtil.copy(configPath, startDir.getPath(), true);
+            }
+
+            // 复制data
+            String dataPaht = buildProjectPath + "/data";
+            if (FileUtil.exist(dataPaht)) {
+                FileUtil.copy(dataPaht, startDir.getPath(), true);
             }
 
             // 复制document

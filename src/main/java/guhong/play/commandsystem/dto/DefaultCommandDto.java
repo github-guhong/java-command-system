@@ -5,11 +5,10 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.Constant;
-import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.file.FileOperationUtil;
 import guhong.play.commandsystem.dto.entity.CommandConfig;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.util.print.PrintUtil;
@@ -34,8 +33,8 @@ public class DefaultCommandDto implements CommandDto {
      * 命令列表
      * key: 组名
      * value :
-     * key: 命令名字
-     * value： 执行的工作
+     *  key: 命令名字
+     *  value： 执行的工作
      */
     private static Map<String, Map<String, CommandJob>> commandMap = CollectionUtil.newHashMap();
 

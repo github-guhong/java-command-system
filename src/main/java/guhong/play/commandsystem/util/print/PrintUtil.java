@@ -1,7 +1,9 @@
 package guhong.play.commandsystem.util.print;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import guhong.play.commandsystem.CommandManager;
+import guhong.play.commandsystem.constant.Name;
 import guhong.play.commandsystem.gui.terminal.Terminal;
 import lombok.Data;
 import lombok.NonNull;
@@ -118,6 +120,10 @@ public class PrintUtil {
         print(message, true);
     }
 
+    public static void println() {
+        print("", true);
+    }
+
     /**
      * 普通打印
      *
@@ -126,6 +132,11 @@ public class PrintUtil {
     public static void print(String message) {
         print(message, false);
     }
+
+    public static void print() {
+        print("", false);
+    }
+
 
     /**
      * 换行打印
@@ -220,6 +231,65 @@ public class PrintUtil {
         String joinStr = ArrayUtil.join(array, ", ");
         println(joinStr);
     }
+
+    /**
+     * 打印一个带序号的列表
+     * @param list 列表
+     */
+    public static void printWithNumberByName(List<? extends Name> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            print((i+1) + "." + list.get(i).getName() + " ");
+        }
+        println("");
+    }
+
+    /**
+     * 打印一个带序号的列表
+     * @param list 列表
+     */
+    public static void printLnWithNumberByName(List<? extends Name> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            println((i+1) + "." + list.get(i).getName() + " ");
+        }
+        println("");
+    }
+
+
+    /**
+     * 打印一个带序号的列表
+     * @param list 列表
+     */
+    public static void printWithNumber(List<?> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            print((i+1) + "." + list.get(i) + " ");
+        }
+        println("");
+    }
+
+    /**
+     * 打印一个带序号的列表
+     * @param list 列表
+     */
+    public static void printLnWithNumber(List<?> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            println((i+1) + "." + list.get(i) + " ");
+        }
+        println("");
+    }
+
+
 
 
 }

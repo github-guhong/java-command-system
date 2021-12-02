@@ -1,7 +1,6 @@
 package guhong.play.commandsystem.dto.entity;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.util.ToolUtil;
 import lombok.Data;
@@ -28,12 +27,12 @@ public class Command {
      * 命令参数
      * 参数名： 参数值
      */
-    private Map<String, String> params;
+    private Map<String, String> params = CollectionUtil.newHashMap();
 
     /**
      * 命令的值
      */
-    private List<String> valueList;
+    private List<String> valueList = CollectionUtil.newArrayList();
 
     /**
      * 命令源字符串
@@ -48,6 +47,14 @@ public class Command {
                 ", params=" + params +
                 ", value='" + valueList + '\'' +
                 '}';
+    }
+
+    public void putParamValue(String paramName, String paramValue) {
+        this.params.put(paramName, paramValue);
+    }
+
+    public void addValue(String value) {
+        this.valueList.add(value);
     }
 
 
@@ -68,6 +75,17 @@ public class Command {
             return value;
         }
         return null;
+    }
+
+
+    /**
+     * 判断指定参数是否存在
+     *
+     * @param paramName 参数名
+     * @return 存在返回true
+     */
+    public boolean isExistParam(String paramName) {
+        return null != getParamValue(paramName);
     }
 
     /**

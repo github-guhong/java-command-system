@@ -1,10 +1,11 @@
 package guhong.play.commandsystem.dto.entity;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import guhong.play.commandsystem.constant.CommandMode;
 import guhong.play.commandsystem.constant.Constant;
-import guhong.play.commandsystem.util.FileOperationUtil;
+import guhong.play.commandsystem.util.file.FileOperationUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -30,6 +31,11 @@ public class SystemConfig {
 
 
     /**
+     * 第三方配置
+     */
+    private JSONObject thirdParty;
+
+    /**
      * 构建默认系统配置
      *
      * @return 返回默认系统配置
@@ -37,7 +43,7 @@ public class SystemConfig {
     public static SystemConfig buildDefaultConfig() {
         SystemConfig config = new SystemConfig();
         config.setDto("guhong.play.commandsystem.dto.DefaultCommandDto");
-        config.setMode(CommandMode.OF);
+        config.setMode(CommandMode.CMD);
         return config;
     }
 

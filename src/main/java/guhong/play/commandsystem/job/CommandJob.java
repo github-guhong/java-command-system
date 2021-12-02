@@ -26,11 +26,18 @@ public interface CommandJob {
     public CommandConfig getCommandConfig();
 
     /**
+     * 初始化
+     * 在命令执行前调用
+     */
+    public default void init() { }
+
+    /**
      * 开始执行任务
      *
      * @param command 命令对象
      */
     public void run(Command command);
+
 
 
     /**
@@ -58,6 +65,7 @@ public interface CommandJob {
      */
     public default void doStart(String commandStr) {
         Command command = getParseHandler().parse(commandStr, this.getCommandConfig());
+        init();
         getExecutor().execute(command, this);
     }
 }
