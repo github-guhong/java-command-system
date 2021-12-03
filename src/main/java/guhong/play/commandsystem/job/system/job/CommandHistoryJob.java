@@ -40,6 +40,8 @@ public class CommandHistoryJob implements CommandJob {
         CommandHistoryManage historyCommandManage = CommandManager.getTerminal().getHistoryCommandManage();
         if (command.isExistParam("-l")) {
             List<String> historyList = historyCommandManage.getHistoryList();
+            PrintUtil.println("命令历史最大容量：" + CommandManager.getSystemConfig().getMaxHistory());
+            PrintUtil.println("当前历史记录：");
             if (CollectionUtil.isNotEmpty(historyList)) {
                 PrintUtil.printLnWithNumber(historyList);
             }

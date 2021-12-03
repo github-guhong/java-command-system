@@ -31,12 +31,10 @@ public class CommandHistoryManage{
      */
     private volatile Integer index = 0;
 
-    private final Integer maxHistory;
+
 
 
     public CommandHistoryManage() {
-        maxHistory = CommandManager.getSystemConfig().getMaxHistory();
-
         JsonFileUtil.createArrayFile(HISTORY_LIST_PATH);
         List<String> lastData = JsonFileUtil.readClassArray(HISTORY_LIST_PATH, String.class);
         if (CollectionUtil.isNotEmpty(lastData)) {
@@ -55,7 +53,7 @@ public class CommandHistoryManage{
         this.historyList.add(str.trim() + " ");
         index = this.historyList.size() - 1;
 
-        if (this.historyList.size() > maxHistory) {
+        if (this.historyList.size() > CommandManager.getSystemConfig().getMaxHistory()) {
             this.historyList.remove(0);
         }
 
