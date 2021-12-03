@@ -23,11 +23,10 @@ public class MainProgram {
         for (String process : javaProcess) {
             if (process.contains("java-command-system")) {
                 count++;
-                String pid = process.split(" ")[0];
             }
         }
         if (count >= max) {
-            // 弹出当前在运行的java-command-system
+            // todo 弹出当前在运行的java-command-system
             ToolUtil.shutdown();
         }
         new MainWindow();

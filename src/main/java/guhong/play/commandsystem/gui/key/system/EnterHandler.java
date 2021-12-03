@@ -3,7 +3,6 @@ package guhong.play.commandsystem.gui.key.system;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.gui.command.CommandContent;
-import guhong.play.commandsystem.gui.history.CommandHistoryManage;
 import guhong.play.commandsystem.gui.key.KeyListenerHandler;
 import guhong.play.commandsystem.gui.key.type.KeyType;
 import guhong.play.commandsystem.gui.terminal.Terminal;
@@ -55,15 +54,9 @@ public class EnterHandler implements KeyListenerHandler {
             try {
                 // 执行命令
                 CommandManager.execute(commandStr);
-
             } catch (Exception exception) {
                 PrintUtil.errorPrint(exception);
             } finally {
-                // 记录历史,刷新索引
-                CommandHistoryManage historyCommandManage = terminal.getHistoryCommandManage();
-                historyCommandManage.add(commandStr);
-                historyCommandManage.flush();
-
                 // 清除命令
                 commandContent.clear();
             }

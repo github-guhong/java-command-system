@@ -38,17 +38,7 @@ public class ImageBeautifyService implements BeautifyService {
     private static final Pattern IMAGE_PATTERN = Pattern.compile("!\\[.*]\\(.*\\)");
 
     public ImageBeautifyService() {
-        try {
-            if (!FileUtil.exist(LINK_CACHE_PATH)) {
-                FileUtil.mkParentDirs(LINK_CACHE_PATH);
-                File file = new File(LINK_CACHE_PATH);
-                file.createNewFile();
-                String content = "[]";
-                IoUtil.write(FileUtil.getOutputStream(file), StandardCharsets.UTF_8, true, content);
-            }
-        } catch (Exception e) {
-            PrintUtil.warnPrint("链接文件缓存创建失败！");
-        }
+        JsonFileUtil.createArrayFile(LINK_CACHE_PATH);
     }
 
     /**

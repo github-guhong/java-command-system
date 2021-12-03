@@ -99,19 +99,17 @@ class MainWindowListener implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-
     }
 
 
     @Override
     public void windowClosing(WindowEvent e) {
-        System.exit(0);
+        CommandManager.end();
     }
 
 
     @Override
     public void windowClosed(WindowEvent e) {
-
     }
 
 

@@ -143,4 +143,5 @@ public class Command {
     public String getLastValue() {
         return valueList.get(valueList.size() - 1);
     }
+
 }

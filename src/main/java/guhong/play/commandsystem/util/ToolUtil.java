@@ -3,6 +3,7 @@ package guhong.play.commandsystem.util;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.StrUtil;
+import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.dto.entity.Command;
 import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.util.windows.CmdUtil;
@@ -74,25 +75,6 @@ public class ToolUtil {
 
 
     /**
-     * 获得命令名
-     *
-     * @param commandStr 命令字符串
-     * @return 返回命令名
-     */
-    public static String getCommandKey(String commandStr) {
-        if (StrUtil.isBlank(commandStr)) {
-            return null;
-        }
-        commandStr = commandStr.trim();
-        String[] split = commandStr.split("\\s+");
-        String commandKey = split[0];
-        if (StrUtil.isBlank(commandKey)) {
-            return null;
-        }
-        return commandKey;
-    }
-
-    /**
      * 获得环境变量的值
      *
      * @param key key
@@ -140,7 +122,7 @@ public class ToolUtil {
      * 关机
      */
     public static void shutdown() {
-        System.exit(0);
+        CommandManager.end();
     }
 
     /**

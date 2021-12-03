@@ -32,6 +32,18 @@ public interface CommandJob {
     public default void init() { }
 
     /**
+     * 初始化
+     * 在窗口打开后
+     */
+    public default void windowOpened() { }
+
+    /**
+     * 初始化
+     * 在窗口关闭时
+     */
+    public default void windowClosing() { }
+
+    /**
      * 开始执行任务
      *
      * @param command 命令对象

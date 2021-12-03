@@ -36,6 +36,11 @@ public class SystemConfig {
     private JSONObject thirdParty;
 
     /**
+     * 最大的历史记录条数
+     */
+    private Integer maxHistory;
+
+    /**
      * 构建默认系统配置
      *
      * @return 返回默认系统配置

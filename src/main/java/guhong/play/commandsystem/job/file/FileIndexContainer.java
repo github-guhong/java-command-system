@@ -79,7 +79,7 @@ public class FileIndexContainer {
                     this.fileIndex.add(fileIndex);
                 }
             } else {
-                throw new SystemException("没有找到任何文件。");
+                PrintUtil.errorPrint("没有找到任何文件。");
             }
         }
 
@@ -162,13 +162,15 @@ public class FileIndexContainer {
         if (CollectionUtil.isEmpty(fileIndex)) {
             PrintUtil.println("\n文件索引不存在，正在尝试重新创建。。。");
             if (CollectionUtil.isEmpty(this.directoryList)) {
-                throw new SystemException("没有设置任何快捷目录。你可以通过[of -s 目录名 -i 忽略的文件]来添加快捷目录。详情请使用[help of]查看命令帮助文档");
+                PrintUtil.errorPrint("没有设置任何快捷目录。你可以通过[of -s 目录名 -i 忽略的文件]来添加快捷目录。详情请使用[help of]查看命令帮助文档");
+                return result;
             }
             this.reload();
             if (CollectionUtil.isNotEmpty(fileIndex)) {
                 PrintUtil.println("创建完成！");
             } else {
-                throw new SystemException("没有找到任何文件");
+                PrintUtil.errorPrint("没有找到任何文件");
+                return result;
             }
         }
         for (FileIndex index : this.fileIndex) {

@@ -8,7 +8,9 @@ import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.util.print.PrintUtil;
 import lombok.Data;
 
+import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -71,8 +73,36 @@ public class JsonFileUtil {
     }
 
 
+    public static void createFile(String path, boolean isArray) {
+        try {
+            if (!FileUtil.exist(path)) {
+                FileUtil.mkParentDirs(path);
+                File file = new File(path);
+                file.createNewFile();
+                String content = "{}";
+                if (isArray) {
+                    content = "[]";
+                }
+                IoUtil.write(FileUtil.getOutputStream(file), StandardCharsets.UTF_8, true, content);
+            }
+        } catch (Exception e) {
+            PrintUtil.warnPrint(path + "文件创建失败！");
+        }
+    }
+
+    public static void createArrayFile(String path) {
+        createFile(path, true);
+    }
+
+
+    public static void createObjectFile(String path) {
+        createFile(path, false);
+    }
 
 
 
 
-}
+
+
+
+    }

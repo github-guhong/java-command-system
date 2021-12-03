@@ -1,20 +1,18 @@
 package guhong.play.commandsystem;
 
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import guhong.play.commandsystem.constant.CommandMode;
 import guhong.play.commandsystem.constant.Constant;
-import guhong.play.commandsystem.exception.SystemException;
-import guhong.play.commandsystem.gui.terminal.Terminal;
-import guhong.play.commandsystem.job.file.OpenFileJob;
-import guhong.play.commandsystem.util.file.FileOperationUtil;
-import guhong.play.commandsystem.dto.entity.SystemConfig;
-import guhong.play.commandsystem.job.CommandJob;
 import guhong.play.commandsystem.dto.CommandDto;
-import guhong.play.commandsystem.exception.NotCommandException;
-import guhong.play.commandsystem.util.ToolUtil;
+import guhong.play.commandsystem.dto.entity.SystemConfig;
+import guhong.play.commandsystem.exception.SystemException;
+import guhong.play.commandsystem.gui.history.CommandHistoryManage;
+import guhong.play.commandsystem.gui.terminal.Terminal;
+import guhong.play.commandsystem.job.CommandJob;
+import guhong.play.commandsystem.util.file.FileOperationUtil;
 import guhong.play.commandsystem.util.print.PrintUtil;
-import guhong.play.commandsystem.util.windows.CmdUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,36 +50,59 @@ public class CommandManager {
 
 
     public static void execute(String commandStr) {
-        String commandKey = ToolUtil.getCommandKey(commandStr);
+        String commandKey = getCommandKey(commandStr);
         if (null == commandKey) {
-            throw new NotCommandException(commandStr);
-        } else {
-            CommandJob commandJob = commandDto.getCommandJob(commandKey);
+            return;
+        }
+        CommandJob commandJob = commandDto.getCommandJob(commandKey);
+        if (null == commandJob) {
+            CommandMode mode = systemConfig.getMode();
+            commandKey = mode.getCommandKey();
+            commandStr = commandKey + " " + commandStr;
+            commandJob = commandDto.getCommandJob(commandKey);
             if (null == commandJob) {
-                if (CommandMode.OF.equals(systemConfig.getMode())) {
-                    commandStr = "of " + commandStr;
-                    commandJob = new OpenFileJob();
-                } else if (CommandMode.CMD.equals(systemConfig.getMode())) {
-                    Process process = CmdUtil.exec(commandStr);
-                    if (null == process) {
-                        throw new NotCommandException(commandKey);
-                    } else {
-                        CmdUtil.printProcess(process);
-                    }
-                    return;
-                }
+                PrintUtil.errorPrint("命令模式【"+mode+"】设置了一个不存在的命令Key【"+commandKey+"】请检查！");
+                return;
+            }
+        }
+        try {
+            commandJob.doStart(commandStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            PrintUtil.errorPrint("命令执行失败：" + e.getMessage());
+        } finally {
+            // 记录历史,刷新索引
+            CommandHistoryManage historyCommandManage = terminal.getHistoryCommandManage();
+            historyCommandManage.add(commandStr);
+            historyCommandManage.flush();
 
-            }
-            try {
-                commandJob.doStart(commandStr);
-            } catch (Exception e) {
-                e.printStackTrace();
-                PrintUtil.errorPrint("命令执行失败：" + e.getMessage());
-            }
         }
     }
 
 
+    /**
+     * 获得命令名
+     *
+     * @param commandStr 命令字符串
+     * @return 返回命令名
+     */
+    public static String getCommandKey(String commandStr) {
+        if (StrUtil.isBlank(commandStr)) {
+            return null;
+        }
+        commandStr = commandStr.trim();
+        String[] split = commandStr.split("\\s+");
+        String commandKey = split[0];
+        if (StrUtil.isBlank(commandKey)) {
+            return null;
+        }
+        return commandKey;
+    }
+
+
+    /**
+     * 初始化
+     */
     public static void init() {
         try {
             // 读取配置文件
@@ -100,10 +121,25 @@ public class CommandManager {
                 throw new SystemException("命令传输对象无法初始化，请检查配置！");
             }
             commandDto.load(null);
+
+            // 执行命令的初始化
+            for (CommandJob commandJob : commandDto.getCommandJobList(null)) {
+                commandJob.windowOpened();
+            }
         } catch (Exception e) {
             PrintUtil.errorPrint("命令管理器初始化失败：" + e.getMessage());
         }
+    }
 
+    /**
+     * 结束
+     */
+    public static void end() {
+        // 执行命令的结束回调
+        for (CommandJob commandJob : commandDto.getCommandJobList(null)) {
+            commandJob.windowClosing();
+        }
+        System.exit(0);
     }
 
 

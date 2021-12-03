@@ -142,6 +142,20 @@ util		// 存放工具类
      */
     public default void init() { }
 
+
+    /**
+     * 初始化
+     * 在窗口打开后
+     */
+    public default void windowOpened() { }
+
+    /**
+     * 初始化
+     * 在窗口关闭时
+     */
+    public default void windowClosing() { }
+
+
     /**
      * 开始执行任务
      * @param command 命令对象
@@ -173,6 +187,10 @@ util		// 存放工具类
 ​	`run`方法就是要执行命令后要运行的代码，该方法会传入一个解析好的[**Command**](#三）Command)对象
 
 ​	`init`方法会在执行命令之前调用，它是一个`defalut`方法，如果你有需要在执行命令前做一些事情就可以实现一下它。
+
+​	`windowOpened`方法会在窗口打开时执行的一个回调。
+
+​	`windowClosing`方法会在窗口关闭时执行的一个回调。
 
 
 
@@ -717,9 +735,8 @@ guhong#2021-01-05 22-21 java-command-system/ : build
 
 
 
-## X、下个版本计划
+## X、以后的计划
 
-- v2.2.0
 - 新增
 
     - of 命令扩展
@@ -729,20 +746,28 @@ guhong#2021-01-05 22-21 java-command-system/ : build
 
             - 支持通过忽略文件进行忽略
             - 增加一些默认的忽略标识。如：`.jpg  .png .git`...
-        - 增加默认快捷路径，默认将`start/config`和`document`目录设置为快捷路径
         - of支持路径匹配
-        - 
+        
+            
 
     - 支持扩展终端
+    
     - 支持别名
-    - 
+    
+    - 支持管道符
+    
+    - 支持一次性执行多命令
+    
+    - 支持tab命令补全/提示
 - 优化
 
     - 优化终端显示
         - 解决光标定位问题
         - 解决控制台无法动态打印问题。
+    - 保证只运行一个程序的同时，弹出或者高亮已经在运行的程序
     - build 命令
         - 构建项目后，可以选择是否创建快捷方式到桌面
+    - 优化命令传输对象，维护一个CommandKey列表：List<String> 来满足特定业务的需求
 - bug
 
     - 
