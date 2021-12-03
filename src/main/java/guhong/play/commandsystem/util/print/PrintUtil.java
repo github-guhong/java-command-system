@@ -92,6 +92,7 @@ public class PrintUtil {
      * @param e 打印的异常
      */
     public static void errorPrint(Exception e) {
+        e.printStackTrace();
         errorPrint(e.getMessage(), true);
     }
 

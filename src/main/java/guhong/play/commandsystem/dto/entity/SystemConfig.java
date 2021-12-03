@@ -38,7 +38,7 @@ public class SystemConfig {
     /**
      * 最大的历史记录条数
      */
-    private Integer maxHistory;
+    private Integer maxHistory = 10;
 
     /**
      * 构建默认系统配置

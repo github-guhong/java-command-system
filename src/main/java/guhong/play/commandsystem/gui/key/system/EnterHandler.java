@@ -1,5 +1,6 @@
 package guhong.play.commandsystem.gui.key.system;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.StrUtil;
 import guhong.play.commandsystem.CommandManager;
 import guhong.play.commandsystem.gui.command.CommandContent;
@@ -54,8 +55,9 @@ public class EnterHandler implements KeyListenerHandler {
             try {
                 // 执行命令
                 CommandManager.execute(commandStr);
-            } catch (Exception exception) {
-                PrintUtil.errorPrint(exception);
+            } catch (Exception e) {
+                e.printStackTrace();
+                PrintUtil.errorPrint(ExceptionUtil.getRootCauseMessage(e));
             } finally {
                 // 清除命令
                 commandContent.clear();

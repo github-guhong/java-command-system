@@ -45,6 +45,7 @@ public class CommandReloadJob implements CommandJob {
             value = ArrayUtil.toArray(valueList, String.class);
         }
         CommandManager.getCommandDto().reload(value);
+        CommandManager.getSystemConfig().sync();
         PrintUtil.println("重新加载成功，使用[list]命令查看当前所有命令信息");
     }
 }

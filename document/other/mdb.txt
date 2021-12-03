@@ -40,6 +40,7 @@
           }
         }
       }
+    详情请见：https://gitee.com/gitee-guhong/java-command-system/blob/master/config/sys-config.json
     当然你可以实现自己的上传服务，上传到其他服务器
     只要实现
         guhong.play.commandsystem.job.other.md.service.impl.link.upload.UploadService

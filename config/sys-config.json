@@ -1,1 +1,16 @@
-{"mode":"OF","thirdParty":{"aliyun":{"accessKeyId":"你阿里云账号的accessKeyId。控制台-头像-accessKey管理","accessKeySecret":"你阿里云账号的accessKeySecret。同上","oss":{"bucketName":"桶名称：https://help.aliyun.com/document_detail/177682.html","endpoint":"oss-cn-shenzhen.aliyuncs.com","prefix":"存放文件的前缀"}}},"maxHistory":100,"dto":"guhong.play.commandsystem.dto.DefaultCommandDto"}
+{
+  "mode": "OF",
+  "thirdParty": {
+    "aliyun": {
+      "accessKeyId": "你阿里云账号的accessKeyId。控制台-头像-accessKey管理",
+      "accessKeySecret": "你阿里云账号的accessKeySecret。同上",
+      "oss": {
+        "bucketName": "桶名称：https://help.aliyun.com/document_detail/177682.html",
+        "endpoint": "oss-cn-shenzhen.aliyuncs.com",
+        "prefix": "存放文件的前缀"
+      }
+    }
+  },
+  "maxHistory": 10,
+  "dto": "guhong.play.commandsystem.dto.DefaultCommandDto"
+}
