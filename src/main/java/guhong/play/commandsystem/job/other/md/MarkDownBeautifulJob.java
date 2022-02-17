@@ -33,7 +33,7 @@ public class MarkDownBeautifulJob implements CommandJob {
         commandConfig.setGroup("other");
         commandConfig.setDescription("美化Markdown文件");
         commandConfig.setFileIntroduce("mdb.txt");
-        commandConfig.putParamConfig("-b", true);
+        commandConfig.putParamConfig("-b", false);
         commandConfig.putParamConfig("-c", false);
         commandConfig.putParamConfig("-r", true);
         commandConfig.putParamConfig("-l", false);
