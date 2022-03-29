@@ -28,7 +28,7 @@ public class CmdUtil {
      * @return 返回执行结果
      */
     public static Process exec(String command) {
-        command = "cmd.exe /c" + command;
+        command = "cmd.exe /c " + command;
         Runtime run = Runtime.getRuntime();
         try {
             return run.exec(command);
@@ -210,5 +210,11 @@ public class CmdUtil {
      */
     public static String addQuote(String value) {
         return "\"" + value + "\"";
+    }
+
+    public static void killTask(String... pids) {
+        for (String pid : pids) {
+            CmdUtil.execAndPrint("taskkill /PID " + pid);
+        }
     }
 }

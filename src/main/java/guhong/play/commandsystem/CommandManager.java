@@ -1,5 +1,6 @@
 package guhong.play.commandsystem;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -69,7 +70,7 @@ public class CommandManager {
             commandJob.doStart(commandStr);
         } catch (Exception e) {
             e.printStackTrace();
-            PrintUtil.errorPrint("命令执行失败：" + e.getMessage());
+            PrintUtil.errorPrint("命令执行失败：" + ExceptionUtil.getRootCause(e).getMessage());
         } finally {
             // 记录历史,刷新索引
             CommandHistoryManage historyCommandManage = terminal.getHistoryCommandManage();
