@@ -92,6 +92,9 @@ public class CmdUtil {
         return exec(commands);
     }
 
+    public static Process openFile(String filePath) {
+        return openFile(new File(filePath));
+    }
 
     /**
      * 打印执行结果
@@ -210,11 +213,5 @@ public class CmdUtil {
      */
     public static String addQuote(String value) {
         return "\"" + value + "\"";
-    }
-
-    public static void killTask(String... pids) {
-        for (String pid : pids) {
-            CmdUtil.execAndPrint("taskkill /PID " + pid);
-        }
     }
 }
