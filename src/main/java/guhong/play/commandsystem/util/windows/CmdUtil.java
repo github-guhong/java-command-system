@@ -214,4 +214,10 @@ public class CmdUtil {
     public static String addQuote(String value) {
         return "\"" + value + "\"";
     }
+
+    public static void killTask(String... pids) {
+        for (String pid : pids) {
+            CmdUtil.execAndPrint("taskkill /PID " + pid);
+        }
+    }
 }
